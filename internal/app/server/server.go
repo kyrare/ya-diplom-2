@@ -4,19 +4,21 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/kyrare/ya-diplom-2/internal/infrastructure/connection"
-	"github.com/kyrare/ya-diplom-2/internal/service/logger"
+	"github.com/kyrare/ya-diplom-2/internal/app/interfaces"
+	"github.com/kyrare/ya-diplom-2/internal/app/services"
+	"github.com/kyrare/ya-diplom-2/internal/infrastructure/db/postgres"
 )
 
 type App struct {
-	config *Config
-	logger *logger.Logger
-	db     *sql.DB
+	config      *Config
+	logger      *services.Logger
+	db          *sql.DB
+	userService interfaces.UserService
 }
 
 func NewApp(
 	config *Config,
-	logger *logger.Logger,
+	logger *services.Logger,
 ) *App {
 	return &App{
 		config: config,
@@ -25,7 +27,7 @@ func NewApp(
 }
 
 func (app *App) Configure(ctx context.Context) error {
-	db, err := connection.NewPostgresql(
+	db, err := postgres.NewPostgresql(
 		app.config.DB.Name,
 		app.config.DB.Host,
 		app.config.DB.Port,
@@ -38,6 +40,10 @@ func (app *App) Configure(ctx context.Context) error {
 		return err
 	}
 	app.db = db
+
+	userRepository := postgres.NewPostgresUserRepository(db)
+
+	app.userService = services.NewUserService(userRepository)
 
 	return nil
 }

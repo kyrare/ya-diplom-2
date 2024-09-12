@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/kyrare/ya-diplom-2/internal/app/server"
-	"github.com/kyrare/ya-diplom-2/internal/service/logger"
+	"github.com/kyrare/ya-diplom-2/internal/app/services"
 )
 
 func main() {
@@ -16,7 +16,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	l, err := logger.NewLogger(false)
+	l, err := services.NewLogger(false)
 	if err != nil {
 		log.Fatal(err)
 	}
