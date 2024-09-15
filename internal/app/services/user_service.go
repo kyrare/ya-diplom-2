@@ -18,7 +18,7 @@ func NewUserService(userRepository repository.UserRepository) interfaces.UserSer
 	}
 }
 
-func (s *UserService) CreateUser(userCommand *command.CreateUserCommand) (*command.CreateUserCommandResult, error) {
+func (s *UserService) Create(userCommand *command.CreateUserCommand) (*command.CreateUserCommandResult, error) {
 	newUser := entities.NewUser(
 		userCommand.Login,
 		userCommand.Password,

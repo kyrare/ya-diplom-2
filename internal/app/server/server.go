@@ -10,10 +10,11 @@ import (
 )
 
 type App struct {
-	config      *Config
-	logger      *services.Logger
-	db          *sql.DB
-	userService interfaces.UserService
+	config            *Config
+	logger            *services.Logger
+	db                *sql.DB
+	userService       interfaces.UserService
+	userSecretService interfaces.UserSecretService
 }
 
 func NewApp(
@@ -44,6 +45,10 @@ func (app *App) Configure(ctx context.Context) error {
 	userRepository := postgres.NewPostgresUserRepository(db)
 
 	app.userService = services.NewUserService(userRepository)
+
+	userSecretRepository := postgres.NewPostgresUserSecretRepository(db, userRepository)
+
+	app.userSecretService = services.NewUserSecretService(userSecretRepository)
 
 	return nil
 }

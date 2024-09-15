@@ -6,7 +6,7 @@ import (
 )
 
 type UserService interface {
-	CreateUser(productCommand *command.CreateUserCommand) (*command.CreateUserCommandResult, error)
+	Create(productCommand *command.CreateUserCommand) (*command.CreateUserCommandResult, error)
 	FindUserById(id uuid.UUID) (*command.FindUserByIdCommandResult, error)
 	FindUserByLogin(id uuid.UUID) (*command.FindUserByLoginCommandResult, error)
 	Delete(id uuid.UUID) error
