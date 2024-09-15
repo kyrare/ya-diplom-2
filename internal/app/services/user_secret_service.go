@@ -16,11 +16,11 @@ type UserSecretService struct {
 
 func NewUserSecretService(
 	secretRepository repository.UserSecretRepository,
-	// fileRepository repository.UserSecretFileRepository,
+	fileRepository repository.UserSecretFileRepository,
 ) interfaces.UserSecretService {
 	return &UserSecretService{
 		secretRepository: secretRepository,
-		//fileRepository:   fileRepository,
+		fileRepository:   fileRepository,
 	}
 }
 
@@ -29,7 +29,7 @@ func (s *UserSecretService) Create(ctx context.Context, command *command.CreateU
 		command.User,
 		command.SecretType,
 		command.SecretName,
-		command.SecretData,
+		&command.SecretData,
 	)
 
 	validatedSecret, err := entities.NewValidatedUserSecret(newSecret)
@@ -38,12 +38,19 @@ func (s *UserSecretService) Create(ctx context.Context, command *command.CreateU
 	}
 
 	createdSecret, err := s.secretRepository.Create(validatedSecret)
-
 	if err != nil {
 		return nil, err
 	}
 
-	// todo store file
+	fileData, err := command.SecretData.GetData()
+	if err != nil {
+		return nil, err
+	}
+
+	err = s.fileRepository.Store(createdSecret.Id, fileData)
+	if err != nil {
+		return nil, err
+	}
 
 	return createdSecret, nil
 }

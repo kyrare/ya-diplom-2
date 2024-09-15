@@ -7,10 +7,11 @@ import (
 	"github.com/kyrare/ya-diplom-2/internal/app/interfaces"
 	"github.com/kyrare/ya-diplom-2/internal/app/services"
 	"github.com/kyrare/ya-diplom-2/internal/infrastructure/db/postgres"
+	"github.com/kyrare/ya-diplom-2/internal/infrastructure/s3/minio"
 )
 
 type App struct {
-	config            *Config
+	config            *services.Config
 	logger            *services.Logger
 	db                *sql.DB
 	userService       interfaces.UserService
@@ -18,7 +19,7 @@ type App struct {
 }
 
 func NewApp(
-	config *Config,
+	config *services.Config,
 	logger *services.Logger,
 ) *App {
 	return &App{
@@ -48,7 +49,13 @@ func (app *App) Configure(ctx context.Context) error {
 
 	userSecretRepository := postgres.NewPostgresUserSecretRepository(db, userRepository)
 
-	app.userSecretService = services.NewUserSecretService(userSecretRepository)
+	minioClient, err := minio.NewClient(app.config, app.logger)
+	if err != nil {
+		return err
+	}
+	userSecretFileRepository := minio.NewMinioUserSecretFileRepository("user-secrets", minioClient)
+
+	app.userSecretService = services.NewUserSecretService(userSecretRepository, userSecretFileRepository)
 
 	return nil
 }
