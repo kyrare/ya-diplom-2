@@ -6,14 +6,12 @@ import (
 	"github.com/minio/minio-go/v7/pkg/credentials"
 )
 
-func NewClient(config *services.Config, logger *services.Logger) (*minio.Client, error) {
-	conf := &config.Minio
+func NewClient(endpoint, accessKey, secretKey string, useSSL bool, logger *services.Logger) (*minio.Client, error) {
+	logger.Infof("crete new minio client, host: %s key: %s useSsl: %t", endpoint, accessKey, useSSL)
 
-	logger.Infof("crete new minio client, host: %s key: %s useSsl: %t", conf.Endpoint, conf.AccessKey, conf.UseSSL)
-
-	client, err := minio.New(conf.Endpoint, &minio.Options{
-		Creds:  credentials.NewStaticV4(conf.AccessKey, conf.SecretKey, ""),
-		Secure: conf.UseSSL,
+	client, err := minio.New(endpoint, &minio.Options{
+		Creds:  credentials.NewStaticV4(accessKey, secretKey, ""),
+		Secure: useSSL,
 	})
 	if err != nil {
 		return nil, err

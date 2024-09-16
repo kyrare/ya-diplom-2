@@ -1,7 +1,12 @@
 package repository
 
-import "github.com/google/uuid"
+import (
+	"context"
+
+	"github.com/google/uuid"
+)
 
 type UserSecretFileRepository interface {
-	Store(objectId uuid.UUID, data []byte) error
+	Store(ctx context.Context, objectId uuid.UUID, data []byte) error
+	Get(ctx context.Context, objectId uuid.UUID) ([]byte, error)
 }

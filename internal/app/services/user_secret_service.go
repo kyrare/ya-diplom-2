@@ -47,7 +47,7 @@ func (s *UserSecretService) Create(ctx context.Context, command *command.CreateU
 		return nil, err
 	}
 
-	err = s.fileRepository.Store(createdSecret.Id, fileData)
+	err = s.fileRepository.Store(ctx, createdSecret.Id, fileData)
 	if err != nil {
 		return nil, err
 	}

@@ -49,7 +49,13 @@ func (app *App) Configure(ctx context.Context) error {
 
 	userSecretRepository := postgres.NewPostgresUserSecretRepository(db, userRepository)
 
-	minioClient, err := minio.NewClient(app.config, app.logger)
+	minioClient, err := minio.NewClient(
+		app.config.Minio.Endpoint,
+		app.config.Minio.AccessKey,
+		app.config.Minio.SecretKey,
+		app.config.Minio.UseSSL,
+		app.logger,
+	)
 	if err != nil {
 		return err
 	}

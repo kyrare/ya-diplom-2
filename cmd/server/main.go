@@ -16,7 +16,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	l, err := services.NewLogger(false)
+	l, err := services.NewLogger(config.Debug)
 	if err != nil {
 		log.Fatal(err)
 	}
