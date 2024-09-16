@@ -11,6 +11,9 @@ type Config struct {
 		User     string `env:"DB_USER" env-default:"postgres"`
 		Password string `env:"DB_PASSWORD" env-default:"postgres"`
 	}
+	GRPC struct {
+		Address string `env:"GRPC_ADDRESS" env-default:"localhost:50051"`
+	}
 	Minio struct {
 		Endpoint  string `env:"MINIO_ENDPOINT" env-default:"localhost:9000"`
 		AccessKey string `env:"MINIO_ACCESS_KEY"`

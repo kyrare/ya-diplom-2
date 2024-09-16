@@ -3,11 +3,13 @@ package server
 import (
 	"context"
 	"database/sql"
+	"net"
 
 	"github.com/kyrare/ya-diplom-2/internal/app/interfaces"
 	"github.com/kyrare/ya-diplom-2/internal/app/services"
 	"github.com/kyrare/ya-diplom-2/internal/infrastructure/db/postgres"
 	"github.com/kyrare/ya-diplom-2/internal/infrastructure/s3/minio"
+	"google.golang.org/grpc"
 )
 
 type App struct {
@@ -67,6 +69,20 @@ func (app *App) Configure(ctx context.Context) error {
 }
 
 func (app *App) Run(ctx context.Context) error {
+	listen, err := net.Listen("tcp", app.config.GRPC.Address)
+	if err != nil {
+		return err
+	}
+
+	server := grpc.NewServer()
+
+	// todo register interfaces
+
+	app.logger.Info("Start gRPC server")
+	// получаем запрос gRPC
+	if err := server.Serve(listen); err != nil {
+		return err
+	}
 
 	return nil
 }
