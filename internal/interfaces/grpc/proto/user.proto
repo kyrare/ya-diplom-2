@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package metrics;
+
+option go_package = "user/proto";
+
+message RegisterUserRequest {
+  string login = 1;
+  string password = 2;
+}
+
+message RegisterUserResponse {
+  string error = 1; // ошибка
+}
+
+message AuthUserRequest {
+  string login = 1;
+  string password = 2;
+}
+
+message AuthUserResponse {
+  string error = 1; // ошибка
+}
+
+service User {
+  rpc RegisterUser(RegisterUserRequest) returns (RegisterUserResponse);
+  rpc AuthUser(AuthUserRequest) returns (AuthUserResponse);
+}

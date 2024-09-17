@@ -9,6 +9,7 @@ import (
 	"github.com/kyrare/ya-diplom-2/internal/app/services"
 	"github.com/kyrare/ya-diplom-2/internal/infrastructure/db/postgres"
 	"github.com/kyrare/ya-diplom-2/internal/infrastructure/s3/minio"
+	igrpc "github.com/kyrare/ya-diplom-2/internal/interfaces/grpc"
 	"google.golang.org/grpc"
 )
 
@@ -76,7 +77,8 @@ func (app *App) Run(ctx context.Context) error {
 
 	server := grpc.NewServer()
 
-	// todo register interfaces
+	igrpc.NewUserServer(server, app.userService)
+	igrpc.NewUserSecretServer(server, app.userSecretService)
 
 	app.logger.Info("Start gRPC server")
 	// получаем запрос gRPC

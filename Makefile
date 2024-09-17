@@ -11,3 +11,6 @@ migrate_down:
 
 create_migration:
 	@read -p "Введите название миграции: " migration; goose create $$migration sql
+
+proto:
+	protoc --go_out=. --go_opt=paths=source_relative  --go-grpc_out=. --go-grpc_opt=paths=source_relative internal/interfaces/grpc/proto/*.proto
