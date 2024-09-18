@@ -80,7 +80,7 @@ func (app *App) Run(ctx context.Context) error {
 	igrpc.NewUserServer(server, app.userService)
 	igrpc.NewUserSecretServer(server, app.userSecretService)
 
-	app.logger.Info("Start gRPC server")
+	app.logger.Infof("start gRPC server on %s", listen.Addr())
 	// получаем запрос gRPC
 	if err := server.Serve(listen); err != nil {
 		return err

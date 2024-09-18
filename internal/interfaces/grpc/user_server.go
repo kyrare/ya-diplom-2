@@ -25,12 +25,6 @@ func NewUserServer(s *grpc.Server, userService interfaces.UserService) *UserServ
 	return server
 }
 
-// type UserServiceServer interface {
-//	RegisterUser(context.Context, *RegisterUserRequest) (*RegisterUserResponse, error)
-//	AuthUser(context.Context, *AuthUserRequest) (*AuthUserResponse, error)
-//	mustEmbedUnimplementedUserServiceServer()
-//}
-
 func (s UserServer) RegisterUser(ctx context.Context, request *proto.RegisterUserRequest) (*proto.RegisterUserResponse, error) {
 	var response proto.RegisterUserResponse
 
@@ -42,7 +36,7 @@ func (s UserServer) RegisterUser(ctx context.Context, request *proto.RegisterUse
 		response.Error = err.Error()
 	}
 
-	return &response, err
+	return &response, nil
 }
 
 func (s UserServer) AuthUser(ctx context.Context, request *proto.AuthUserRequest) (*proto.AuthUserResponse, error) {
