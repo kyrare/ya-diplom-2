@@ -25,8 +25,8 @@ func NewUserServer(s *grpc.Server, userService interfaces.UserService) *UserServ
 	return server
 }
 
-func (s UserServer) RegisterUser(ctx context.Context, request *proto.RegisterUserRequest) (*proto.RegisterUserResponse, error) {
-	var response proto.RegisterUserResponse
+func (s UserServer) Register(ctx context.Context, request *proto.RegisterRequest) (*proto.RegisterResponse, error) {
+	var response proto.RegisterResponse
 
 	_, err := s.userService.Create(&command.CreateUserCommand{
 		Login:    request.Login,
@@ -39,7 +39,12 @@ func (s UserServer) RegisterUser(ctx context.Context, request *proto.RegisterUse
 	return &response, nil
 }
 
-func (s UserServer) AuthUser(ctx context.Context, request *proto.AuthUserRequest) (*proto.AuthUserResponse, error) {
+func (s UserServer) Auth(ctx context.Context, request *proto.AuthRequest) (*proto.AuthResponse, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (s UserServer) Logout(ctx context.Context, request *proto.LogoutRequest) (*proto.LogoutResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }

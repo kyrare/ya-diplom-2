@@ -19,9 +19,9 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	UserSecrets_CreateUserSecret_FullMethodName = "/metrics.UserSecrets/CreateUserSecret"
-	UserSecrets_DeleteUserSecret_FullMethodName = "/metrics.UserSecrets/DeleteUserSecret"
-	UserSecrets_GetUserSecrets_FullMethodName   = "/metrics.UserSecrets/GetUserSecrets"
+	UserSecrets_CreateUserSecret_FullMethodName = "/diploma.UserSecrets/CreateUserSecret"
+	UserSecrets_DeleteUserSecret_FullMethodName = "/diploma.UserSecrets/DeleteUserSecret"
+	UserSecrets_GetUserSecrets_FullMethodName   = "/diploma.UserSecrets/GetUserSecrets"
 )
 
 // UserSecretsClient is the client API for UserSecrets service.
@@ -176,7 +176,7 @@ func _UserSecrets_GetUserSecrets_Handler(srv interface{}, ctx context.Context, d
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var UserSecrets_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "metrics.UserSecrets",
+	ServiceName: "diploma.UserSecrets",
 	HandlerType: (*UserSecretsServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

@@ -20,7 +20,7 @@ func NewUser(login string, password string) *User {
 	return &User{
 		Id:        uuid.New(),
 		Login:     login,
-		Password:  password,
+		Password:  password, // todo hash
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
