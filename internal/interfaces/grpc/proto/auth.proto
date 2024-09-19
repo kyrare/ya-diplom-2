@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package diploma;
 
-option go_package = "user/proto";
+option go_package = "auth/proto";
 
 message RegisterRequest {
   string login = 1;
@@ -13,12 +13,12 @@ message RegisterResponse {
   string error = 1; // ошибка
 }
 
-message AuthRequest {
+message LoginRequest {
   string login = 1;
   string password = 2;
 }
 
-message AuthResponse {
+message LoginResponse {
   string error = 1; // ошибка
 }
 
@@ -29,8 +29,8 @@ message LogoutResponse {
   string error = 1; // ошибка
 }
 
-service User {
+service Auth {
   rpc Register(RegisterRequest) returns (RegisterResponse);
-  rpc Auth(AuthRequest) returns (AuthResponse);
+  rpc Login(LoginRequest) returns (LoginResponse);
   rpc Logout(LogoutRequest) returns (LogoutResponse);
 }

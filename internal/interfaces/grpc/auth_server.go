@@ -9,23 +9,23 @@ import (
 	"google.golang.org/grpc"
 )
 
-type UserServer struct {
-	proto.UnimplementedUserServer
+type AuthServer struct {
+	proto.UnimplementedAuthServer
 
 	userService interfaces.UserService
 }
 
-func NewUserServer(s *grpc.Server, userService interfaces.UserService) *UserServer {
-	server := &UserServer{
+func NewAuthServer(s *grpc.Server, userService interfaces.UserService) *AuthServer {
+	server := &AuthServer{
 		userService: userService,
 	}
 
-	proto.RegisterUserServer(s, server)
+	proto.RegisterAuthServer(s, server)
 
 	return server
 }
 
-func (s UserServer) Register(ctx context.Context, request *proto.RegisterRequest) (*proto.RegisterResponse, error) {
+func (s AuthServer) Register(ctx context.Context, request *proto.RegisterRequest) (*proto.RegisterResponse, error) {
 	var response proto.RegisterResponse
 
 	_, err := s.userService.Create(&command.CreateUserCommand{
@@ -39,12 +39,12 @@ func (s UserServer) Register(ctx context.Context, request *proto.RegisterRequest
 	return &response, nil
 }
 
-func (s UserServer) Auth(ctx context.Context, request *proto.AuthRequest) (*proto.AuthResponse, error) {
+func (s AuthServer) Login(ctx context.Context, request *proto.LoginRequest) (*proto.LoginResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s UserServer) Logout(ctx context.Context, request *proto.LogoutRequest) (*proto.LogoutResponse, error) {
+func (s AuthServer) Logout(ctx context.Context, request *proto.LogoutRequest) (*proto.LogoutResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }

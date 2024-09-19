@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.34.2
 // 	protoc        v5.27.3
-// source: internal/interfaces/grpc/proto/user.proto
+// source: internal/interfaces/grpc/proto/auth.proto
 
 package proto
 
@@ -32,7 +32,7 @@ type RegisterRequest struct {
 func (x *RegisterRequest) Reset() {
 	*x = RegisterRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_interfaces_grpc_proto_user_proto_msgTypes[0]
+		mi := &file_internal_interfaces_grpc_proto_auth_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -45,7 +45,7 @@ func (x *RegisterRequest) String() string {
 func (*RegisterRequest) ProtoMessage() {}
 
 func (x *RegisterRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_interfaces_grpc_proto_user_proto_msgTypes[0]
+	mi := &file_internal_interfaces_grpc_proto_auth_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -58,7 +58,7 @@ func (x *RegisterRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RegisterRequest.ProtoReflect.Descriptor instead.
 func (*RegisterRequest) Descriptor() ([]byte, []int) {
-	return file_internal_interfaces_grpc_proto_user_proto_rawDescGZIP(), []int{0}
+	return file_internal_interfaces_grpc_proto_auth_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *RegisterRequest) GetLogin() string {
@@ -86,7 +86,7 @@ type RegisterResponse struct {
 func (x *RegisterResponse) Reset() {
 	*x = RegisterResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_interfaces_grpc_proto_user_proto_msgTypes[1]
+		mi := &file_internal_interfaces_grpc_proto_auth_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -99,7 +99,7 @@ func (x *RegisterResponse) String() string {
 func (*RegisterResponse) ProtoMessage() {}
 
 func (x *RegisterResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_interfaces_grpc_proto_user_proto_msgTypes[1]
+	mi := &file_internal_interfaces_grpc_proto_auth_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -112,7 +112,7 @@ func (x *RegisterResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RegisterResponse.ProtoReflect.Descriptor instead.
 func (*RegisterResponse) Descriptor() ([]byte, []int) {
-	return file_internal_interfaces_grpc_proto_user_proto_rawDescGZIP(), []int{1}
+	return file_internal_interfaces_grpc_proto_auth_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *RegisterResponse) GetError() string {
@@ -122,7 +122,7 @@ func (x *RegisterResponse) GetError() string {
 	return ""
 }
 
-type AuthRequest struct {
+type LoginRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -131,23 +131,23 @@ type AuthRequest struct {
 	Password string `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
 }
 
-func (x *AuthRequest) Reset() {
-	*x = AuthRequest{}
+func (x *LoginRequest) Reset() {
+	*x = LoginRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_interfaces_grpc_proto_user_proto_msgTypes[2]
+		mi := &file_internal_interfaces_grpc_proto_auth_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
 }
 
-func (x *AuthRequest) String() string {
+func (x *LoginRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*AuthRequest) ProtoMessage() {}
+func (*LoginRequest) ProtoMessage() {}
 
-func (x *AuthRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_interfaces_grpc_proto_user_proto_msgTypes[2]
+func (x *LoginRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_internal_interfaces_grpc_proto_auth_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -158,26 +158,26 @@ func (x *AuthRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use AuthRequest.ProtoReflect.Descriptor instead.
-func (*AuthRequest) Descriptor() ([]byte, []int) {
-	return file_internal_interfaces_grpc_proto_user_proto_rawDescGZIP(), []int{2}
+// Deprecated: Use LoginRequest.ProtoReflect.Descriptor instead.
+func (*LoginRequest) Descriptor() ([]byte, []int) {
+	return file_internal_interfaces_grpc_proto_auth_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *AuthRequest) GetLogin() string {
+func (x *LoginRequest) GetLogin() string {
 	if x != nil {
 		return x.Login
 	}
 	return ""
 }
 
-func (x *AuthRequest) GetPassword() string {
+func (x *LoginRequest) GetPassword() string {
 	if x != nil {
 		return x.Password
 	}
 	return ""
 }
 
-type AuthResponse struct {
+type LoginResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -185,23 +185,23 @@ type AuthResponse struct {
 	Error string `protobuf:"bytes,1,opt,name=error,proto3" json:"error,omitempty"` // ошибка
 }
 
-func (x *AuthResponse) Reset() {
-	*x = AuthResponse{}
+func (x *LoginResponse) Reset() {
+	*x = LoginResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_interfaces_grpc_proto_user_proto_msgTypes[3]
+		mi := &file_internal_interfaces_grpc_proto_auth_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
 }
 
-func (x *AuthResponse) String() string {
+func (x *LoginResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*AuthResponse) ProtoMessage() {}
+func (*LoginResponse) ProtoMessage() {}
 
-func (x *AuthResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_interfaces_grpc_proto_user_proto_msgTypes[3]
+func (x *LoginResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_internal_interfaces_grpc_proto_auth_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -212,12 +212,12 @@ func (x *AuthResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use AuthResponse.ProtoReflect.Descriptor instead.
-func (*AuthResponse) Descriptor() ([]byte, []int) {
-	return file_internal_interfaces_grpc_proto_user_proto_rawDescGZIP(), []int{3}
+// Deprecated: Use LoginResponse.ProtoReflect.Descriptor instead.
+func (*LoginResponse) Descriptor() ([]byte, []int) {
+	return file_internal_interfaces_grpc_proto_auth_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *AuthResponse) GetError() string {
+func (x *LoginResponse) GetError() string {
 	if x != nil {
 		return x.Error
 	}
@@ -233,7 +233,7 @@ type LogoutRequest struct {
 func (x *LogoutRequest) Reset() {
 	*x = LogoutRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_interfaces_grpc_proto_user_proto_msgTypes[4]
+		mi := &file_internal_interfaces_grpc_proto_auth_proto_msgTypes[4]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -246,7 +246,7 @@ func (x *LogoutRequest) String() string {
 func (*LogoutRequest) ProtoMessage() {}
 
 func (x *LogoutRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_interfaces_grpc_proto_user_proto_msgTypes[4]
+	mi := &file_internal_interfaces_grpc_proto_auth_proto_msgTypes[4]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -259,7 +259,7 @@ func (x *LogoutRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LogoutRequest.ProtoReflect.Descriptor instead.
 func (*LogoutRequest) Descriptor() ([]byte, []int) {
-	return file_internal_interfaces_grpc_proto_user_proto_rawDescGZIP(), []int{4}
+	return file_internal_interfaces_grpc_proto_auth_proto_rawDescGZIP(), []int{4}
 }
 
 type LogoutResponse struct {
@@ -273,7 +273,7 @@ type LogoutResponse struct {
 func (x *LogoutResponse) Reset() {
 	*x = LogoutResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_interfaces_grpc_proto_user_proto_msgTypes[5]
+		mi := &file_internal_interfaces_grpc_proto_auth_proto_msgTypes[5]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -286,7 +286,7 @@ func (x *LogoutResponse) String() string {
 func (*LogoutResponse) ProtoMessage() {}
 
 func (x *LogoutResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_interfaces_grpc_proto_user_proto_msgTypes[5]
+	mi := &file_internal_interfaces_grpc_proto_auth_proto_msgTypes[5]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -299,7 +299,7 @@ func (x *LogoutResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LogoutResponse.ProtoReflect.Descriptor instead.
 func (*LogoutResponse) Descriptor() ([]byte, []int) {
-	return file_internal_interfaces_grpc_proto_user_proto_rawDescGZIP(), []int{5}
+	return file_internal_interfaces_grpc_proto_auth_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *LogoutResponse) GetError() string {
@@ -309,12 +309,12 @@ func (x *LogoutResponse) GetError() string {
 	return ""
 }
 
-var File_internal_interfaces_grpc_proto_user_proto protoreflect.FileDescriptor
+var File_internal_interfaces_grpc_proto_auth_proto protoreflect.FileDescriptor
 
-var file_internal_interfaces_grpc_proto_user_proto_rawDesc = []byte{
+var file_internal_interfaces_grpc_proto_auth_proto_rawDesc = []byte{
 	0x0a, 0x29, 0x69, 0x6e, 0x74, 0x65, 0x72, 0x6e, 0x61, 0x6c, 0x2f, 0x69, 0x6e, 0x74, 0x65, 0x72,
 	0x66, 0x61, 0x63, 0x65, 0x73, 0x2f, 0x67, 0x72, 0x70, 0x63, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f,
-	0x2f, 0x75, 0x73, 0x65, 0x72, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x07, 0x64, 0x69, 0x70,
+	0x2f, 0x61, 0x75, 0x74, 0x68, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x07, 0x64, 0x69, 0x70,
 	0x6c, 0x6f, 0x6d, 0x61, 0x22, 0x43, 0x0a, 0x0f, 0x52, 0x65, 0x67, 0x69, 0x73, 0x74, 0x65, 0x72,
 	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x14, 0x0a, 0x05, 0x6c, 0x6f, 0x67, 0x69, 0x6e,
 	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x6c, 0x6f, 0x67, 0x69, 0x6e, 0x12, 0x1a, 0x0a,
@@ -322,60 +322,60 @@ var file_internal_interfaces_grpc_proto_user_proto_rawDesc = []byte{
 	0x08, 0x70, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x22, 0x28, 0x0a, 0x10, 0x52, 0x65, 0x67,
 	0x69, 0x73, 0x74, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x14, 0x0a,
 	0x05, 0x65, 0x72, 0x72, 0x6f, 0x72, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x65, 0x72,
-	0x72, 0x6f, 0x72, 0x22, 0x3f, 0x0a, 0x0b, 0x41, 0x75, 0x74, 0x68, 0x52, 0x65, 0x71, 0x75, 0x65,
-	0x73, 0x74, 0x12, 0x14, 0x0a, 0x05, 0x6c, 0x6f, 0x67, 0x69, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28,
-	0x09, 0x52, 0x05, 0x6c, 0x6f, 0x67, 0x69, 0x6e, 0x12, 0x1a, 0x0a, 0x08, 0x70, 0x61, 0x73, 0x73,
-	0x77, 0x6f, 0x72, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x70, 0x61, 0x73, 0x73,
-	0x77, 0x6f, 0x72, 0x64, 0x22, 0x24, 0x0a, 0x0c, 0x41, 0x75, 0x74, 0x68, 0x52, 0x65, 0x73, 0x70,
-	0x6f, 0x6e, 0x73, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x65, 0x72, 0x72, 0x6f, 0x72, 0x18, 0x01, 0x20,
-	0x01, 0x28, 0x09, 0x52, 0x05, 0x65, 0x72, 0x72, 0x6f, 0x72, 0x22, 0x0f, 0x0a, 0x0d, 0x4c, 0x6f,
-	0x67, 0x6f, 0x75, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x26, 0x0a, 0x0e, 0x4c,
-	0x6f, 0x67, 0x6f, 0x75, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x14, 0x0a,
-	0x05, 0x65, 0x72, 0x72, 0x6f, 0x72, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x65, 0x72,
-	0x72, 0x6f, 0x72, 0x32, 0xb7, 0x01, 0x0a, 0x04, 0x55, 0x73, 0x65, 0x72, 0x12, 0x3f, 0x0a, 0x08,
-	0x52, 0x65, 0x67, 0x69, 0x73, 0x74, 0x65, 0x72, 0x12, 0x18, 0x2e, 0x64, 0x69, 0x70, 0x6c, 0x6f,
-	0x6d, 0x61, 0x2e, 0x52, 0x65, 0x67, 0x69, 0x73, 0x74, 0x65, 0x72, 0x52, 0x65, 0x71, 0x75, 0x65,
-	0x73, 0x74, 0x1a, 0x19, 0x2e, 0x64, 0x69, 0x70, 0x6c, 0x6f, 0x6d, 0x61, 0x2e, 0x52, 0x65, 0x67,
-	0x69, 0x73, 0x74, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x33, 0x0a,
-	0x04, 0x41, 0x75, 0x74, 0x68, 0x12, 0x14, 0x2e, 0x64, 0x69, 0x70, 0x6c, 0x6f, 0x6d, 0x61, 0x2e,
-	0x41, 0x75, 0x74, 0x68, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x15, 0x2e, 0x64, 0x69,
-	0x70, 0x6c, 0x6f, 0x6d, 0x61, 0x2e, 0x41, 0x75, 0x74, 0x68, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
-	0x73, 0x65, 0x12, 0x39, 0x0a, 0x06, 0x4c, 0x6f, 0x67, 0x6f, 0x75, 0x74, 0x12, 0x16, 0x2e, 0x64,
-	0x69, 0x70, 0x6c, 0x6f, 0x6d, 0x61, 0x2e, 0x4c, 0x6f, 0x67, 0x6f, 0x75, 0x74, 0x52, 0x65, 0x71,
-	0x75, 0x65, 0x73, 0x74, 0x1a, 0x17, 0x2e, 0x64, 0x69, 0x70, 0x6c, 0x6f, 0x6d, 0x61, 0x2e, 0x4c,
-	0x6f, 0x67, 0x6f, 0x75, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x42, 0x0c, 0x5a,
-	0x0a, 0x75, 0x73, 0x65, 0x72, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x06, 0x70, 0x72, 0x6f,
-	0x74, 0x6f, 0x33,
+	0x72, 0x6f, 0x72, 0x22, 0x40, 0x0a, 0x0c, 0x4c, 0x6f, 0x67, 0x69, 0x6e, 0x52, 0x65, 0x71, 0x75,
+	0x65, 0x73, 0x74, 0x12, 0x14, 0x0a, 0x05, 0x6c, 0x6f, 0x67, 0x69, 0x6e, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x05, 0x6c, 0x6f, 0x67, 0x69, 0x6e, 0x12, 0x1a, 0x0a, 0x08, 0x70, 0x61, 0x73,
+	0x73, 0x77, 0x6f, 0x72, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x70, 0x61, 0x73,
+	0x73, 0x77, 0x6f, 0x72, 0x64, 0x22, 0x25, 0x0a, 0x0d, 0x4c, 0x6f, 0x67, 0x69, 0x6e, 0x52, 0x65,
+	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x65, 0x72, 0x72, 0x6f, 0x72, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x65, 0x72, 0x72, 0x6f, 0x72, 0x22, 0x0f, 0x0a, 0x0d,
+	0x4c, 0x6f, 0x67, 0x6f, 0x75, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x26, 0x0a,
+	0x0e, 0x4c, 0x6f, 0x67, 0x6f, 0x75, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12,
+	0x14, 0x0a, 0x05, 0x65, 0x72, 0x72, 0x6f, 0x72, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05,
+	0x65, 0x72, 0x72, 0x6f, 0x72, 0x32, 0xba, 0x01, 0x0a, 0x04, 0x41, 0x75, 0x74, 0x68, 0x12, 0x3f,
+	0x0a, 0x08, 0x52, 0x65, 0x67, 0x69, 0x73, 0x74, 0x65, 0x72, 0x12, 0x18, 0x2e, 0x64, 0x69, 0x70,
+	0x6c, 0x6f, 0x6d, 0x61, 0x2e, 0x52, 0x65, 0x67, 0x69, 0x73, 0x74, 0x65, 0x72, 0x52, 0x65, 0x71,
+	0x75, 0x65, 0x73, 0x74, 0x1a, 0x19, 0x2e, 0x64, 0x69, 0x70, 0x6c, 0x6f, 0x6d, 0x61, 0x2e, 0x52,
+	0x65, 0x67, 0x69, 0x73, 0x74, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12,
+	0x36, 0x0a, 0x05, 0x4c, 0x6f, 0x67, 0x69, 0x6e, 0x12, 0x15, 0x2e, 0x64, 0x69, 0x70, 0x6c, 0x6f,
+	0x6d, 0x61, 0x2e, 0x4c, 0x6f, 0x67, 0x69, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a,
+	0x16, 0x2e, 0x64, 0x69, 0x70, 0x6c, 0x6f, 0x6d, 0x61, 0x2e, 0x4c, 0x6f, 0x67, 0x69, 0x6e, 0x52,
+	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x39, 0x0a, 0x06, 0x4c, 0x6f, 0x67, 0x6f, 0x75,
+	0x74, 0x12, 0x16, 0x2e, 0x64, 0x69, 0x70, 0x6c, 0x6f, 0x6d, 0x61, 0x2e, 0x4c, 0x6f, 0x67, 0x6f,
+	0x75, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x17, 0x2e, 0x64, 0x69, 0x70, 0x6c,
+	0x6f, 0x6d, 0x61, 0x2e, 0x4c, 0x6f, 0x67, 0x6f, 0x75, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
+	0x73, 0x65, 0x42, 0x0c, 0x5a, 0x0a, 0x61, 0x75, 0x74, 0x68, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f,
+	0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
-	file_internal_interfaces_grpc_proto_user_proto_rawDescOnce sync.Once
-	file_internal_interfaces_grpc_proto_user_proto_rawDescData = file_internal_interfaces_grpc_proto_user_proto_rawDesc
+	file_internal_interfaces_grpc_proto_auth_proto_rawDescOnce sync.Once
+	file_internal_interfaces_grpc_proto_auth_proto_rawDescData = file_internal_interfaces_grpc_proto_auth_proto_rawDesc
 )
 
-func file_internal_interfaces_grpc_proto_user_proto_rawDescGZIP() []byte {
-	file_internal_interfaces_grpc_proto_user_proto_rawDescOnce.Do(func() {
-		file_internal_interfaces_grpc_proto_user_proto_rawDescData = protoimpl.X.CompressGZIP(file_internal_interfaces_grpc_proto_user_proto_rawDescData)
+func file_internal_interfaces_grpc_proto_auth_proto_rawDescGZIP() []byte {
+	file_internal_interfaces_grpc_proto_auth_proto_rawDescOnce.Do(func() {
+		file_internal_interfaces_grpc_proto_auth_proto_rawDescData = protoimpl.X.CompressGZIP(file_internal_interfaces_grpc_proto_auth_proto_rawDescData)
 	})
-	return file_internal_interfaces_grpc_proto_user_proto_rawDescData
+	return file_internal_interfaces_grpc_proto_auth_proto_rawDescData
 }
 
-var file_internal_interfaces_grpc_proto_user_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
-var file_internal_interfaces_grpc_proto_user_proto_goTypes = []any{
+var file_internal_interfaces_grpc_proto_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_internal_interfaces_grpc_proto_auth_proto_goTypes = []any{
 	(*RegisterRequest)(nil),  // 0: diploma.RegisterRequest
 	(*RegisterResponse)(nil), // 1: diploma.RegisterResponse
-	(*AuthRequest)(nil),      // 2: diploma.AuthRequest
-	(*AuthResponse)(nil),     // 3: diploma.AuthResponse
+	(*LoginRequest)(nil),     // 2: diploma.LoginRequest
+	(*LoginResponse)(nil),    // 3: diploma.LoginResponse
 	(*LogoutRequest)(nil),    // 4: diploma.LogoutRequest
 	(*LogoutResponse)(nil),   // 5: diploma.LogoutResponse
 }
-var file_internal_interfaces_grpc_proto_user_proto_depIdxs = []int32{
-	0, // 0: diploma.User.Register:input_type -> diploma.RegisterRequest
-	2, // 1: diploma.User.Auth:input_type -> diploma.AuthRequest
-	4, // 2: diploma.User.Logout:input_type -> diploma.LogoutRequest
-	1, // 3: diploma.User.Register:output_type -> diploma.RegisterResponse
-	3, // 4: diploma.User.Auth:output_type -> diploma.AuthResponse
-	5, // 5: diploma.User.Logout:output_type -> diploma.LogoutResponse
+var file_internal_interfaces_grpc_proto_auth_proto_depIdxs = []int32{
+	0, // 0: diploma.Auth.Register:input_type -> diploma.RegisterRequest
+	2, // 1: diploma.Auth.Login:input_type -> diploma.LoginRequest
+	4, // 2: diploma.Auth.Logout:input_type -> diploma.LogoutRequest
+	1, // 3: diploma.Auth.Register:output_type -> diploma.RegisterResponse
+	3, // 4: diploma.Auth.Login:output_type -> diploma.LoginResponse
+	5, // 5: diploma.Auth.Logout:output_type -> diploma.LogoutResponse
 	3, // [3:6] is the sub-list for method output_type
 	0, // [0:3] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
@@ -383,13 +383,13 @@ var file_internal_interfaces_grpc_proto_user_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for field type_name
 }
 
-func init() { file_internal_interfaces_grpc_proto_user_proto_init() }
-func file_internal_interfaces_grpc_proto_user_proto_init() {
-	if File_internal_interfaces_grpc_proto_user_proto != nil {
+func init() { file_internal_interfaces_grpc_proto_auth_proto_init() }
+func file_internal_interfaces_grpc_proto_auth_proto_init() {
+	if File_internal_interfaces_grpc_proto_auth_proto != nil {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_internal_interfaces_grpc_proto_user_proto_msgTypes[0].Exporter = func(v any, i int) any {
+		file_internal_interfaces_grpc_proto_auth_proto_msgTypes[0].Exporter = func(v any, i int) any {
 			switch v := v.(*RegisterRequest); i {
 			case 0:
 				return &v.state
@@ -401,7 +401,7 @@ func file_internal_interfaces_grpc_proto_user_proto_init() {
 				return nil
 			}
 		}
-		file_internal_interfaces_grpc_proto_user_proto_msgTypes[1].Exporter = func(v any, i int) any {
+		file_internal_interfaces_grpc_proto_auth_proto_msgTypes[1].Exporter = func(v any, i int) any {
 			switch v := v.(*RegisterResponse); i {
 			case 0:
 				return &v.state
@@ -413,8 +413,8 @@ func file_internal_interfaces_grpc_proto_user_proto_init() {
 				return nil
 			}
 		}
-		file_internal_interfaces_grpc_proto_user_proto_msgTypes[2].Exporter = func(v any, i int) any {
-			switch v := v.(*AuthRequest); i {
+		file_internal_interfaces_grpc_proto_auth_proto_msgTypes[2].Exporter = func(v any, i int) any {
+			switch v := v.(*LoginRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -425,8 +425,8 @@ func file_internal_interfaces_grpc_proto_user_proto_init() {
 				return nil
 			}
 		}
-		file_internal_interfaces_grpc_proto_user_proto_msgTypes[3].Exporter = func(v any, i int) any {
-			switch v := v.(*AuthResponse); i {
+		file_internal_interfaces_grpc_proto_auth_proto_msgTypes[3].Exporter = func(v any, i int) any {
+			switch v := v.(*LoginResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -437,7 +437,7 @@ func file_internal_interfaces_grpc_proto_user_proto_init() {
 				return nil
 			}
 		}
-		file_internal_interfaces_grpc_proto_user_proto_msgTypes[4].Exporter = func(v any, i int) any {
+		file_internal_interfaces_grpc_proto_auth_proto_msgTypes[4].Exporter = func(v any, i int) any {
 			switch v := v.(*LogoutRequest); i {
 			case 0:
 				return &v.state
@@ -449,7 +449,7 @@ func file_internal_interfaces_grpc_proto_user_proto_init() {
 				return nil
 			}
 		}
-		file_internal_interfaces_grpc_proto_user_proto_msgTypes[5].Exporter = func(v any, i int) any {
+		file_internal_interfaces_grpc_proto_auth_proto_msgTypes[5].Exporter = func(v any, i int) any {
 			switch v := v.(*LogoutResponse); i {
 			case 0:
 				return &v.state
@@ -466,18 +466,18 @@ func file_internal_interfaces_grpc_proto_user_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: file_internal_interfaces_grpc_proto_user_proto_rawDesc,
+			RawDescriptor: file_internal_interfaces_grpc_proto_auth_proto_rawDesc,
 			NumEnums:      0,
 			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_internal_interfaces_grpc_proto_user_proto_goTypes,
-		DependencyIndexes: file_internal_interfaces_grpc_proto_user_proto_depIdxs,
-		MessageInfos:      file_internal_interfaces_grpc_proto_user_proto_msgTypes,
+		GoTypes:           file_internal_interfaces_grpc_proto_auth_proto_goTypes,
+		DependencyIndexes: file_internal_interfaces_grpc_proto_auth_proto_depIdxs,
+		MessageInfos:      file_internal_interfaces_grpc_proto_auth_proto_msgTypes,
 	}.Build()
-	File_internal_interfaces_grpc_proto_user_proto = out.File
-	file_internal_interfaces_grpc_proto_user_proto_rawDesc = nil
-	file_internal_interfaces_grpc_proto_user_proto_goTypes = nil
-	file_internal_interfaces_grpc_proto_user_proto_depIdxs = nil
+	File_internal_interfaces_grpc_proto_auth_proto = out.File
+	file_internal_interfaces_grpc_proto_auth_proto_rawDesc = nil
+	file_internal_interfaces_grpc_proto_auth_proto_goTypes = nil
+	file_internal_interfaces_grpc_proto_auth_proto_depIdxs = nil
 }
