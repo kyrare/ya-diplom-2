@@ -10,11 +10,15 @@ import (
 
 type UserService struct {
 	userRepository repository.UserRepository
+	authService    interfaces.AuthService
+	logger         *Logger
 }
 
-func NewUserService(userRepository repository.UserRepository) interfaces.UserService {
+func NewUserService(userRepository repository.UserRepository, authService interfaces.AuthService, logger *Logger) interfaces.UserService {
 	return &UserService{
 		userRepository: userRepository,
+		authService:    authService,
+		logger:         logger,
 	}
 }
 
@@ -28,6 +32,13 @@ func (s *UserService) Create(userCommand *command.CreateUserCommand) (*command.C
 	if err != nil {
 		return nil, err
 	}
+
+	hash, err := s.authService.PassToHash(validatedUser.Password)
+	if err != nil {
+		s.logger.Errorf("Не удалось сгенерировать хеш, ошибка: %s", err.Error())
+		return nil, err
+	}
+	validatedUser.Password = hash
 
 	createdUser, err := s.userRepository.Create(validatedUser)
 	if err != nil {

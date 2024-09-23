@@ -17,6 +17,7 @@ type App struct {
 	config            *services.Config
 	logger            *services.Logger
 	db                *sql.DB
+	authService       interfaces.AuthService
 	userService       interfaces.UserService
 	userSecretService interfaces.UserSecretService
 }
@@ -48,7 +49,9 @@ func (app *App) Configure(ctx context.Context) error {
 
 	userRepository := postgres.NewPostgresUserRepository(db)
 
-	app.userService = services.NewUserService(userRepository)
+	app.authService = services.NewAuthService(userRepository, app.config.Jwt.Secret, app.config.Jwt.Duration, app.logger)
+
+	app.userService = services.NewUserService(userRepository, app.authService, app.logger)
 
 	userSecretRepository := postgres.NewPostgresUserSecretRepository(db, userRepository)
 
@@ -77,7 +80,7 @@ func (app *App) Run(ctx context.Context) error {
 
 	server := grpc.NewServer()
 
-	igrpc.NewAuthServer(server, app.userService)
+	igrpc.NewAuthServer(server, app.userService, app.authService)
 	igrpc.NewUserSecretServer(server, app.userSecretService)
 
 	app.logger.Infof("start gRPC server on %s", listen.Addr())

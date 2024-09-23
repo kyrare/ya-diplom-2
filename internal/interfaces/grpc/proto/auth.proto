@@ -10,7 +10,8 @@ message RegisterRequest {
 }
 
 message RegisterResponse {
-  string error = 1; // ошибка
+  string jwtToken = 1;
+  string error = 2; // ошибка
 }
 
 message LoginRequest {
@@ -19,18 +20,12 @@ message LoginRequest {
 }
 
 message LoginResponse {
-  string error = 1; // ошибка
+  string jwtToken = 1;
+  string error = 2; // ошибка
 }
 
-message LogoutRequest {
-}
-
-message LogoutResponse {
-  string error = 1; // ошибка
-}
 
 service Auth {
   rpc Register(RegisterRequest) returns (RegisterResponse);
   rpc Login(LoginRequest) returns (LoginResponse);
-  rpc Logout(LogoutRequest) returns (LogoutResponse);
 }

@@ -13,11 +13,13 @@ type AuthServer struct {
 	proto.UnimplementedAuthServer
 
 	userService interfaces.UserService
+	authService interfaces.AuthService
 }
 
-func NewAuthServer(s *grpc.Server, userService interfaces.UserService) *AuthServer {
+func NewAuthServer(s *grpc.Server, userService interfaces.UserService, authService interfaces.AuthService) *AuthServer {
 	server := &AuthServer{
 		userService: userService,
+		authService: authService,
 	}
 
 	proto.RegisterAuthServer(s, server)
@@ -26,25 +28,37 @@ func NewAuthServer(s *grpc.Server, userService interfaces.UserService) *AuthServ
 }
 
 func (s AuthServer) Register(ctx context.Context, request *proto.RegisterRequest) (*proto.RegisterResponse, error) {
-	var response proto.RegisterResponse
-
 	_, err := s.userService.Create(&command.CreateUserCommand{
 		Login:    request.Login,
 		Password: request.Password,
 	})
 	if err != nil {
-		response.Error = err.Error()
+		return nil, err
 	}
 
-	return &response, nil
+	login, err := s.authService.Login(&command.LoginCommand{
+		Login:    request.Login,
+		Password: request.Password,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return &proto.RegisterResponse{
+		JwtToken: login.JwtToken,
+	}, nil
 }
 
 func (s AuthServer) Login(ctx context.Context, request *proto.LoginRequest) (*proto.LoginResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
+	login, err := s.authService.Login(&command.LoginCommand{
+		Login:    request.Login,
+		Password: request.Password,
+	})
+	if err != nil {
+		return nil, err
+	}
 
-func (s AuthServer) Logout(ctx context.Context, request *proto.LogoutRequest) (*proto.LogoutResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	return &proto.LoginResponse{
+		JwtToken: login.JwtToken,
+	}, nil
 }
