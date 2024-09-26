@@ -1,6 +1,9 @@
 package services
 
 import (
+	"errors"
+	"fmt"
+
 	"github.com/google/uuid"
 	"github.com/kyrare/ya-diplom-2/internal/app/command"
 	"github.com/kyrare/ya-diplom-2/internal/app/interfaces"
@@ -33,7 +36,16 @@ func (s *UserService) Create(userCommand *command.CreateUserCommand) (*command.C
 		return nil, err
 	}
 
-	hash, err := s.authService.PassToHash(validatedUser.Password)
+	existUser, err := s.userRepository.FindByLogin(userCommand.Login)
+	fmt.Printf("%+v\n", existUser)
+	if err != nil {
+		return nil, err
+	}
+	if existUser != nil {
+		return nil, errors.New("такой пользователь уже существует")
+	}
+
+	hash, err := s.authService.HashPassword(validatedUser.Password)
 	if err != nil {
 		s.logger.Errorf("Не удалось сгенерировать хеш, ошибка: %s", err.Error())
 		return nil, err

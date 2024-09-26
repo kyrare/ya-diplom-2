@@ -7,6 +7,6 @@ import (
 
 type AuthService interface {
 	Login(productCommand *command.LoginCommand) (*command.LoginCommandResult, error)
-	PassToHash(password string) (string, error)
+	HashPassword(password string) (string, error)
 	CheckUserPassword(user *entities.User, password string) bool
 }

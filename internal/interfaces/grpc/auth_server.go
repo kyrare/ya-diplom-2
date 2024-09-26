@@ -28,12 +28,15 @@ func NewAuthServer(s *grpc.Server, userService interfaces.UserService, authServi
 }
 
 func (s AuthServer) Register(ctx context.Context, request *proto.RegisterRequest) (*proto.RegisterResponse, error) {
+	resp := new(proto.RegisterResponse)
+
 	_, err := s.userService.Create(&command.CreateUserCommand{
 		Login:    request.Login,
 		Password: request.Password,
 	})
 	if err != nil {
-		return nil, err
+		resp.Error = err.Error()
+		return resp, nil
 	}
 
 	login, err := s.authService.Login(&command.LoginCommand{
@@ -41,24 +44,28 @@ func (s AuthServer) Register(ctx context.Context, request *proto.RegisterRequest
 		Password: request.Password,
 	})
 	if err != nil {
-		return nil, err
+		resp.Error = err.Error()
+		return resp, nil
 	}
 
-	return &proto.RegisterResponse{
-		JwtToken: login.JwtToken,
-	}, nil
+	resp.JwtToken = login.JwtToken
+
+	return resp, nil
 }
 
 func (s AuthServer) Login(ctx context.Context, request *proto.LoginRequest) (*proto.LoginResponse, error) {
+	resp := new(proto.LoginResponse)
+
 	login, err := s.authService.Login(&command.LoginCommand{
 		Login:    request.Login,
 		Password: request.Password,
 	})
 	if err != nil {
-		return nil, err
+		resp.Error = err.Error()
+		return resp, nil
 	}
 
-	return &proto.LoginResponse{
-		JwtToken: login.JwtToken,
-	}, nil
+	resp.JwtToken = login.JwtToken
+
+	return resp, nil
 }

@@ -87,7 +87,7 @@ func (s AuthService) newJwtToken(user *entities.User) (string, error) {
 	return tokenString, nil
 }
 
-func (s AuthService) PassToHash(password string) (string, error) {
+func (s AuthService) HashPassword(password string) (string, error) {
 	h, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		return "", err

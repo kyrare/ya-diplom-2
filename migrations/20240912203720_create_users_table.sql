@@ -10,6 +10,8 @@ create table users
 
     primary key (id)
 );
+
+create unique index users_login_idx on users (login);
 -- +goose StatementEnd
 
 -- +goose Down
