@@ -29,7 +29,7 @@ func (s *UserSecretService) Create(ctx context.Context, command *command.CreateU
 		command.User,
 		command.SecretType,
 		command.SecretName,
-		&command.SecretData,
+		command.SecretData,
 	)
 
 	validatedSecret, err := entities.NewValidatedUserSecret(newSecret)
@@ -42,7 +42,7 @@ func (s *UserSecretService) Create(ctx context.Context, command *command.CreateU
 		return nil, err
 	}
 
-	fileData, err := command.SecretData.GetData()
+	fileData, err := (*command.SecretData).GetData()
 	if err != nil {
 		return nil, err
 	}

@@ -58,3 +58,19 @@ func (us *UserSecret) validate() error {
 
 	return nil
 }
+
+func GetSecretTypeByString(t string) (UserSecretType, error) {
+
+	switch t {
+	case "password":
+		return UserSecretPasswordType, nil
+	case "bank_card":
+		return UserSecretBankCardType, nil
+	case "text":
+		return UserSecretTextType, nil
+	case "file":
+		return UserSecretFileType, nil
+	}
+
+	return UserSecretType(""), errors.New("Неизвестынй тип сикрета")
+}

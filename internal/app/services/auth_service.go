@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 	"github.com/kyrare/ya-diplom-2/internal/app/command"
 	"github.com/kyrare/ya-diplom-2/internal/app/interfaces"
 	"github.com/kyrare/ya-diplom-2/internal/domain/entities"
@@ -17,6 +18,12 @@ type AuthService struct {
 	tokenSecret    string
 	tokenDuration  time.Duration
 	logger         *Logger
+}
+
+type AuthJwtClaims struct {
+	jwt.RegisteredClaims
+	UID   uuid.UUID `json:"uid"`
+	Login string    `json:"login"`
 }
 
 var (
@@ -69,6 +76,20 @@ func (s AuthService) Login(c *command.LoginCommand) (*command.LoginCommandResult
 	}, nil
 }
 
+func (s AuthService) GetUserByToken(t string) (*entities.User, error) {
+	claims, err := s.parseJwtToken(t)
+	if err != nil {
+		return nil, err
+	}
+
+	user, err := s.userRepository.FindById(claims.UID)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
+
 func (s AuthService) newJwtToken(user *entities.User) (string, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 
@@ -85,6 +106,21 @@ func (s AuthService) newJwtToken(user *entities.User) (string, error) {
 	}
 
 	return tokenString, nil
+}
+
+func (s AuthService) parseJwtToken(t string) (*AuthJwtClaims, error) {
+	if t == "" {
+		return nil, errors.New("token is empty")
+	}
+
+	token, err := jwt.ParseWithClaims(t, &AuthJwtClaims{}, func(token *jwt.Token) (interface{}, error) {
+		return []byte(s.tokenSecret), nil
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return token.Claims.(*AuthJwtClaims), nil
 }
 
 func (s AuthService) HashPassword(password string) (string, error) {

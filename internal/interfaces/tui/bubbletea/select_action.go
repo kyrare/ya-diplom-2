@@ -39,12 +39,12 @@ func (m SelectActionModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case tea.KeyCtrlC, tea.KeyEsc:
 			return m, tea.Quit
 		case tea.KeyEnter:
-			//switch m.list.Cursor() {
-			//case 0:
-			//	return NewLoginModel(m), nil
-			//case 1:
-			//	return NewRegisterModel(m), nil
-			//}
+			switch m.list.Cursor() {
+			case 0:
+				return NewSecretType(m, m.service), nil
+			case 1:
+				return NewSecretType(m, m.service), nil
+			}
 		}
 
 	case tea.WindowSizeMsg:

@@ -33,7 +33,7 @@ func NewClientService(serverAddr string, logger *Logger) *ClientService {
 
 func (s *ClientService) Login(ctx context.Context, command *command.LoginCommand) error {
 
-	// todo правильно ли при каждом выводе создавать клиент, или лучше его создать в конструкторе?
+	// todo правильно ли при каждом вызове создавать клиент, или лучше его создать в конструкторе?
 	client := proto.NewAuthClient(s.conn)
 
 	resp, err := client.Login(ctx, &proto.LoginRequest{
@@ -86,6 +86,36 @@ func (s *ClientService) GetUserSecretById(ctx context.Context, id uuid.UUID) (*e
 }
 
 func (s *ClientService) CreateUserSecret(ctx context.Context, command *command.ClientCreateUserSecretCommand) error {
-	//TODO implement me
-	panic("implement me")
+	if !s.isAuth() {
+		return errors.New("not authorized")
+	}
+
+	data, err := command.SecretData.GetData()
+	if err != nil {
+		return err
+	}
+
+	client := proto.NewUserSecretsClient(s.conn)
+
+	resp, err := client.CreateUserSecret(ctx, &proto.CreateUserSecretRequest{
+		Token: s.jwtToken,
+		Secret: &proto.UserSecret{
+			Name: command.SecretName,
+			Type: string(command.SecretType),
+			Data: data,
+		},
+	})
+
+	if err != nil {
+		return err
+	}
+	if resp.Error != "" {
+		return errors.New(resp.Error)
+	}
+
+	return nil
+}
+
+func (s *ClientService) isAuth() bool {
+	return s.jwtToken != ""
 }

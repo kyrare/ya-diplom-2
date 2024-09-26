@@ -27,20 +27,8 @@ type RegisterModel struct {
 func NewRegisterModel(parent tea.Model, service interfaces.ClientService) RegisterModel {
 	inputs := make([]textinput.Model, 2)
 
-	inputs[registerLogin] = textinput.New()
-	inputs[registerLogin].Placeholder = ""
-	inputs[registerLogin].Focus()
-	inputs[registerLogin].CharLimit = 255
-	inputs[registerLogin].Width = 50
-	inputs[registerLogin].Prompt = ""
-
-	inputs[registerPassword] = textinput.New()
-	inputs[registerPassword].Placeholder = "******"
-	inputs[registerPassword].CharLimit = 255
-	inputs[registerPassword].Width = 50
-	inputs[registerPassword].Prompt = ""
-	inputs[registerPassword].EchoMode = textinput.EchoPassword
-	inputs[registerPassword].EchoCharacter = '•'
+	inputs[registerLogin] = NewInput(inputText, true)
+	inputs[registerPassword] = NewInput(inputPassword, false)
 
 	return RegisterModel{
 		parent:  parent,

@@ -9,4 +9,5 @@ type AuthService interface {
 	Login(productCommand *command.LoginCommand) (*command.LoginCommandResult, error)
 	HashPassword(password string) (string, error)
 	CheckUserPassword(user *entities.User, password string) bool
+	GetUserByToken(token string) (*entities.User, error)
 }

@@ -5,7 +5,6 @@ import (
 
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/kyrare/ya-diplom-2/internal/interfaces/tui/bubbletea/validators"
 )
 
 type (
@@ -27,27 +26,21 @@ type AddSecretCartModel struct {
 func NewAddSecretCartModel() AddSecretCartModel {
 	inputs := make([]textinput.Model, 3)
 
-	inputs[ccn] = textinput.New()
+	inputs[ccn] = NewInput(inputText, true)
+	inputs[exp] = NewInput(inputText, false)
+	inputs[cvv] = NewInput(inputText, false)
+
 	inputs[ccn].Placeholder = "4505 **** **** 1234"
-	inputs[ccn].Focus()
 	inputs[ccn].CharLimit = 20
 	inputs[ccn].Width = 30
-	inputs[ccn].Prompt = ""
-	inputs[ccn].Validate = validators.CcnValidator
 
-	inputs[exp] = textinput.New()
-	inputs[exp].Placeholder = "MM/YY "
+	inputs[exp].Placeholder = "MM/YY"
 	inputs[exp].CharLimit = 5
 	inputs[exp].Width = 5
-	inputs[exp].Prompt = ""
-	inputs[exp].Validate = validators.ExpValidator
 
-	inputs[cvv] = textinput.New()
 	inputs[cvv].Placeholder = "XXX"
 	inputs[cvv].CharLimit = 3
 	inputs[cvv].Width = 5
-	inputs[cvv].Prompt = ""
-	inputs[cvv].Validate = validators.CvvValidator
 
 	return AddSecretCartModel{
 		inputs:  inputs,

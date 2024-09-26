@@ -81,7 +81,7 @@ func (app *App) Run(ctx context.Context) error {
 	server := grpc.NewServer()
 
 	igrpc.NewAuthServer(server, app.userService, app.authService)
-	igrpc.NewUserSecretServer(server, app.userSecretService)
+	igrpc.NewUserSecretServer(server, app.userSecretService, app.authService, app.logger)
 
 	app.logger.Infof("start gRPC server on %s", listen.Addr())
 	// получаем запрос gRPC

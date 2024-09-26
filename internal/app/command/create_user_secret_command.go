@@ -8,5 +8,5 @@ type CreateUserSecretCommand struct {
 	User       *entities.User
 	SecretType entities.UserSecretType
 	SecretName string
-	SecretData entities.UserSecretData
+	SecretData *entities.UserSecretData
 }
