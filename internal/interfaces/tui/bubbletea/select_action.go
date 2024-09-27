@@ -16,6 +16,7 @@ func NewSelectAction(service interfaces.ClientService) SelectActionModel {
 	list := list.New([]list.Item{
 		ModelItem{title: "Добавить новый секрет", desc: "Сохраните новый секрет!"},
 		ModelItem{title: "Показать все секреты", desc: "Показать все секреты, которые уже были сохранили"},
+		ModelItem{title: "Удалить секрет", desc: "Удалить один из секретов"},
 	}, list.NewDefaultDelegate(), 60, 15)
 
 	list.SetFilteringEnabled(false)

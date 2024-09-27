@@ -106,12 +106,6 @@ func (m LoginModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m LoginModel) View() string {
-	title := "Авторизация"
-	errMessage := ""
-	if m.err != nil {
-		errMessage = "\n" + errorStyle.Render(m.err.Error()) + "\n"
-	}
-
 	return docStyle.Render(fmt.Sprintf(
 		`%s
 
@@ -123,12 +117,12 @@ func (m LoginModel) View() string {
 %s
 %s
 `,
-		titleStyle.Render(title),
+		titleStyle.Render("Авторизация"),
 		inputLabelStyle.Render("Логин"),
 		m.inputs[loginLogin].View(),
 		inputLabelStyle.Render("Пароль"),
 		m.inputs[loginPassword].View(),
-		errMessage,
+		errToString(m.err),
 		continueStyle.Render("Enter авторизоваться, Esc вернуться"),
 	) + "\n")
 }

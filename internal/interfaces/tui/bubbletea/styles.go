@@ -20,3 +20,12 @@ var (
 	successStyle    = lipgloss.NewStyle().Foreground(green)
 	continueStyle   = lipgloss.NewStyle().Foreground(darkGray)
 )
+
+func errToString(err error) string {
+	message := ""
+	if err != nil {
+		message = "\n" + errorStyle.Render(err.Error()) + "\n"
+	}
+
+	return message
+}

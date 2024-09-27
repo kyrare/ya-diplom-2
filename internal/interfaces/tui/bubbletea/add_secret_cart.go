@@ -1,10 +1,17 @@
 package bubbletea
 
 import (
+	"context"
 	"fmt"
+	"strconv"
+	"strings"
 
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/kyrare/ya-diplom-2/internal/app/command"
+	"github.com/kyrare/ya-diplom-2/internal/app/interfaces"
+	"github.com/kyrare/ya-diplom-2/internal/domain/entities"
+	"github.com/kyrare/ya-diplom-2/internal/interfaces/tui/bubbletea/validators"
 )
 
 type (
@@ -18,12 +25,14 @@ const (
 )
 
 type AddSecretCartModel struct {
+	parent  tea.Model
+	service interfaces.ClientService
 	inputs  []textinput.Model
 	focused int
 	err     error
 }
 
-func NewAddSecretCartModel() AddSecretCartModel {
+func NewAddSecretCartModel(parent tea.Model, service interfaces.ClientService) AddSecretCartModel {
 	inputs := make([]textinput.Model, 3)
 
 	inputs[ccn] = NewInput(inputText, true)
@@ -33,6 +42,7 @@ func NewAddSecretCartModel() AddSecretCartModel {
 	inputs[ccn].Placeholder = "4505 **** **** 1234"
 	inputs[ccn].CharLimit = 20
 	inputs[ccn].Width = 30
+	inputs[ccn].SetValue("1234567890123456")
 
 	inputs[exp].Placeholder = "MM/YY"
 	inputs[exp].CharLimit = 5
@@ -43,6 +53,8 @@ func NewAddSecretCartModel() AddSecretCartModel {
 	inputs[cvv].Width = 5
 
 	return AddSecretCartModel{
+		parent:  parent,
+		service: service,
 		inputs:  inputs,
 		focused: 0,
 		err:     nil,
@@ -61,11 +73,63 @@ func (m AddSecretCartModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch msg.Type {
 		case tea.KeyEnter:
 			if m.focused == len(m.inputs)-1 {
-				return m, tea.Quit
+				ccnV := m.inputs[ccn].Value()
+				expV := m.inputs[exp].Value()
+				cvvV := m.inputs[cvv].Value()
+
+				if err := validators.CcnValidator(ccnV); err != nil {
+					m.err = err
+					return m, nil
+				}
+
+				if err := validators.ExpValidator(expV); err != nil {
+					m.err = err
+					return m, nil
+				}
+
+				if err := validators.CvvValidator(cvvV); err != nil {
+					m.err = err
+					return m, nil
+				}
+
+				parts := strings.Split(expV, "/")
+				month, err := strconv.ParseInt(parts[0], 10, 64)
+				if err != nil {
+					m.err = fmt.Errorf("EXP is invalid")
+					return m, nil
+				}
+				year, err := strconv.ParseInt(parts[1], 10, 64)
+				if err != nil {
+					m.err = fmt.Errorf("EXP is invalid")
+					return m, nil
+				}
+
+				year += 2000
+
+				cvvI, err := strconv.ParseInt(cvvV, 10, 64)
+				if err != nil {
+					m.err = fmt.Errorf("CVV is invalid")
+					return m, nil
+				}
+
+				err = m.service.CreateUserSecret(context.Background(), &command.ClientCreateUserSecretCommand{
+					SecretType: entities.UserSecretBankCardType,
+					SecretName: ccnV,
+					SecretData: entities.NewUserSecretBankCard(ccnV, month, year, cvvI),
+				})
+
+				if err != nil {
+					m.err = err
+					return m, nil
+				}
+
+				return NewSuccess(m.service), nil
 			}
 			m.nextInput()
-		case tea.KeyCtrlC, tea.KeyEsc:
+		case tea.KeyCtrlC:
 			return m, tea.Quit
+		case tea.KeyEsc:
+			return m.parent, nil
 		case tea.KeyShiftTab, tea.KeyCtrlP:
 			m.prevInput()
 		case tea.KeyTab, tea.KeyCtrlN:
@@ -104,6 +168,7 @@ func (m AddSecretCartModel) View() string {
  %s  %s
 
  %s
+ %s
 `,
 		inputLabelStyle.Width(30).Render("Card Number"),
 		m.inputs[ccn].View(),
@@ -111,7 +176,8 @@ func (m AddSecretCartModel) View() string {
 		inputLabelStyle.Width(6).Render("CVV"),
 		m.inputs[exp].View(),
 		m.inputs[cvv].View(),
-		continueStyle.Render("Сохранить ->"),
+		errToString(m.err),
+		continueStyle.Render("Enter сохранить, Esc вернуться"),
 	) + "\n"
 }
 

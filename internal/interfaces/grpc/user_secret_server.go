@@ -36,7 +36,6 @@ func NewUserSecretServer(s *grpc.Server, secretService interfaces.UserSecretServ
 }
 
 func (s UserSecretServer) CreateUserSecret(ctx context.Context, request *proto.CreateUserSecretRequest) (*proto.CreateUserSecretResponse, error) {
-
 	user, err := s.authService.GetUserByToken(request.Token)
 	if err != nil {
 		return nil, status.Errorf(codes.Unauthenticated, "invalid token")
@@ -56,6 +55,8 @@ func (s UserSecretServer) CreateUserSecret(ctx context.Context, request *proto.C
 		return nil, status.Errorf(codes.InvalidArgument, "invalid secret data")
 	}
 
+	s.logger.Infof("Start create new secret, type: %s, user: %s, data: %s", t, user.Id, string(request.Secret.Data))
+
 	_, err = s.secretService.Create(ctx, &command.CreateUserSecretCommand{
 		User:       user,
 		SecretType: t,
@@ -63,7 +64,14 @@ func (s UserSecretServer) CreateUserSecret(ctx context.Context, request *proto.C
 		SecretData: &d,
 	})
 
-	return &proto.CreateUserSecretResponse{}, nil
+	resp := &proto.CreateUserSecretResponse{}
+
+	if err != nil {
+		s.logger.Error(err)
+		resp.Error = err.Error()
+	}
+
+	return resp, nil
 
 }
 

@@ -11,7 +11,7 @@ import (
 	"github.com/kyrare/ya-diplom-2/internal/domain/entities"
 )
 
-type AddSecretLoginModel struct {
+type AddSecretPasswordModel struct {
 	parent  tea.Model
 	service interfaces.ClientService
 	inputs  []textinput.Model
@@ -25,14 +25,14 @@ const (
 	secretPasswordPassword
 )
 
-func NewAddSecretPassportModel(parent tea.Model, service interfaces.ClientService) AddSecretLoginModel {
+func NewAddSecretPasswordModel(parent tea.Model, service interfaces.ClientService) AddSecretPasswordModel {
 	inputs := make([]textinput.Model, 3)
 
 	inputs[secretPasswordName] = NewInput(inputText, true)
 	inputs[secretPasswordLogin] = NewInput(inputText, false)
 	inputs[secretPasswordPassword] = NewInput(inputPassword, false)
 
-	return AddSecretLoginModel{
+	return AddSecretPasswordModel{
 		parent:  parent,
 		service: service,
 		inputs:  inputs,
@@ -41,11 +41,11 @@ func NewAddSecretPassportModel(parent tea.Model, service interfaces.ClientServic
 	}
 }
 
-func (m AddSecretLoginModel) Init() tea.Cmd {
+func (m AddSecretPasswordModel) Init() tea.Cmd {
 	return textinput.Blink
 }
 
-func (m AddSecretLoginModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m AddSecretPasswordModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	cmds := make([]tea.Cmd, len(m.inputs))
 
 	switch msg := msg.(type) {
@@ -100,13 +100,7 @@ func (m AddSecretLoginModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, tea.Batch(cmds...)
 }
 
-func (m AddSecretLoginModel) View() string {
-	title := "Добавить логин/пароль"
-	errMessage := ""
-	if m.err != nil {
-		errMessage = "\n" + errorStyle.Render(m.err.Error()) + "\n"
-	}
-
+func (m AddSecretPasswordModel) View() string {
 	return docStyle.Render(fmt.Sprintf(
 		`%s
 
@@ -119,25 +113,25 @@ func (m AddSecretLoginModel) View() string {
 %s
 %s
 `,
-		titleStyle.Render(title),
+		titleStyle.Render("Добавить логин/пароль"),
 		inputLabelStyle.Render("Название"),
 		m.inputs[secretPasswordName].View(),
 		inputLabelStyle.Render("Логин"),
 		m.inputs[secretPasswordLogin].View(),
 		inputLabelStyle.Render("Пароль"),
 		m.inputs[secretPasswordPassword].View(),
-		errMessage,
+		errToString(m.err),
 		continueStyle.Render("Enter сохранить, Esc вернуться"),
 	) + "\n")
 }
 
 // nextInput focuses the next input field
-func (m *AddSecretLoginModel) nextInput() {
+func (m *AddSecretPasswordModel) nextInput() {
 	m.focused = (m.focused + 1) % len(m.inputs)
 }
 
 // prevInput focuses the previous input field
-func (m *AddSecretLoginModel) prevInput() {
+func (m *AddSecretPasswordModel) prevInput() {
 	m.focused--
 	// Wrap around
 	if m.focused < 0 {

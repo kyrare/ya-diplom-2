@@ -103,12 +103,6 @@ func (m RegisterModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m RegisterModel) View() string {
-	title := "Регистрация"
-	errMessage := ""
-	if m.err != nil {
-		errMessage = "\n" + errorStyle.Render(m.err.Error()) + "\n"
-	}
-
 	return docStyle.Render(fmt.Sprintf(
 		`%s
 
@@ -120,12 +114,12 @@ func (m RegisterModel) View() string {
 %s
 %s
 `,
-		titleStyle.Render(title),
+		titleStyle.Render("Регистрация"),
 		inputLabelStyle.Render("Логин"),
 		m.inputs[registerLogin].View(),
 		inputLabelStyle.Render("Пароль"),
 		m.inputs[registerPassword].View(),
-		errMessage,
+		errToString(m.err),
 		continueStyle.Render("Enter зарегистрироваться, Esc вернуться"),
 	) + "\n")
 }

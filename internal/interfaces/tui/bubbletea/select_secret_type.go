@@ -17,21 +17,21 @@ func NewSecretType(parent tea.Model, service interfaces.ClientService) SelectSec
 	delegate := list.NewDefaultDelegate()
 	delegate.ShowDescription = false
 
-	list := list.New([]list.Item{
+	l := list.New([]list.Item{
 		ModelItem{title: "Добавить логин/пароль", desc: ""},
 		ModelItem{title: "Добавить банковскую карту", desc: ""},
 		ModelItem{title: "Добавить файл", desc: ""},
 		ModelItem{title: "Добавить производный текст", desc: ""},
 	}, delegate, 60, 15)
 
-	list.SetFilteringEnabled(false)
-	list.SetShowStatusBar(false)
-	list.Title = "Выберете тип секрета"
+	l.SetFilteringEnabled(false)
+	l.SetShowStatusBar(false)
+	l.Title = "Выберете тип секрета"
 
 	return SelectSecretTypeModel{
 		parent:  parent,
 		service: service,
-		list:    list,
+		list:    l,
 	}
 }
 
@@ -50,8 +50,10 @@ func (m SelectSecretTypeModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case tea.KeyEnter:
 			switch m.list.Cursor() {
 			case 0:
-				return NewAddSecretPassportModel(m.parent, m.service), nil
+				return NewAddSecretPasswordModel(m.parent, m.service), nil
 			case 1:
+				return NewAddSecretCartModel(m.parent, m.service), nil
+			default:
 				return m.parent, nil
 			}
 		}

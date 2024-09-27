@@ -87,5 +87,8 @@ func CvvValidator(s string) error {
 	// Since the input will already ensure that the CVV is a string of length 3,
 	// All we need to do is check that it is a number
 	_, err := strconv.ParseInt(s, 10, 64)
-	return err
+	if err != nil {
+		return fmt.Errorf("CVV is invalid")
+	}
+	return nil
 }
