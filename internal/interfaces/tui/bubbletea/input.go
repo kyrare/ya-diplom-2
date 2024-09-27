@@ -1,6 +1,9 @@
 package bubbletea
 
-import "github.com/charmbracelet/bubbles/textinput"
+import (
+	"github.com/charmbracelet/bubbles/textarea"
+	"github.com/charmbracelet/bubbles/textinput"
+)
 
 type inputType string
 
@@ -27,4 +30,14 @@ func NewInput(t inputType, focus bool) textinput.Model {
 	}
 
 	return input
+}
+
+func NewTextarea(focus bool) textarea.Model {
+	ti := textarea.New()
+
+	if focus {
+		ti.Focus()
+	}
+
+	return ti
 }
