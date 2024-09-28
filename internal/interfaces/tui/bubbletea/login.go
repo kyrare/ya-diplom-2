@@ -30,8 +30,8 @@ func NewLoginModel(parent tea.Model, service interfaces.ClientService) LoginMode
 	inputs[loginLogin] = NewInput(inputText, true)
 	inputs[loginPassword] = NewInput(inputPassword, false)
 
-	inputs[loginLogin].SetValue("test")
-	inputs[loginPassword].SetValue("123123")
+	//inputs[loginLogin].SetValue("test")
+	//inputs[loginPassword].SetValue("123123")
 
 	return LoginModel{
 		parent:  parent,

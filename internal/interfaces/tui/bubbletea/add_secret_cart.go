@@ -42,7 +42,7 @@ func NewAddSecretCartModel(parent tea.Model, service interfaces.ClientService) A
 	inputs[ccn].Placeholder = "4505 **** **** 1234"
 	inputs[ccn].CharLimit = 20
 	inputs[ccn].Width = 30
-	inputs[ccn].SetValue("1234567890123456")
+	//inputs[ccn].SetValue("1234567890123456")
 
 	inputs[exp].Placeholder = "MM/YY"
 	inputs[exp].CharLimit = 5
