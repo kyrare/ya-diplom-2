@@ -103,7 +103,10 @@ func (s *ClientService) GetUserSecrets(ctx context.Context) ([]*entities.UserSec
 			return nil, err
 		}
 
+		id, _ := uuid.Parse(secret.Id)
+
 		secrets = append(secrets, &entities.UserSecret{
+			Id:   id,
 			Type: entities.UserSecretType(secret.Type),
 			Name: secret.Name,
 			Data: &d,
@@ -116,9 +119,26 @@ func (s *ClientService) GetUserSecrets(ctx context.Context) ([]*entities.UserSec
 	return secrets, nil
 }
 
-func (s *ClientService) GetUserSecretById(ctx context.Context, id uuid.UUID) (*entities.UserSecret, error) {
-	//TODO implement me
-	panic("implement me")
+func (s *ClientService) DeleteUserSecret(ctx context.Context, id uuid.UUID) error {
+	if !s.isAuth() {
+		return errors.New("not authorized")
+	}
+
+	client := proto.NewUserSecretsClient(s.conn)
+
+	resp, err := client.DeleteUserSecret(ctx, &proto.DeleteUserSecretRequest{
+		Token: s.jwtToken,
+		Id:    id.String(),
+	})
+
+	if err != nil {
+		return err
+	}
+	if resp.Error != "" {
+		return errors.New(resp.Error)
+	}
+
+	return nil
 }
 
 func (s *ClientService) CreateUserSecret(ctx context.Context, command *command.ClientCreateUserSecretCommand) error {

@@ -8,15 +8,17 @@ import (
 )
 
 type SecretsListModel struct {
-	parent  tea.Model
-	service interfaces.ClientService
-	list    list.Model
+	parent         tea.Model
+	service        interfaces.ClientService
+	list           list.Model
+	deleteOnSelect bool
 }
 
 func NewSecretsList(
 	parent tea.Model,
 	secrets []*entities.UserSecret,
 	service interfaces.ClientService,
+	deleteOnSelect bool,
 ) SecretsListModel {
 	delegate := list.NewDefaultDelegate()
 
@@ -28,15 +30,13 @@ func NewSecretsList(
 	w, h := getListSizes()
 
 	l := list.New(items, delegate, w, h)
-
-	//l.SetFilteringEnabled(false)
-	//l.SetShowStatusBar(false)
 	l.Title = "Все ваши секреты"
 
 	return SecretsListModel{
-		parent:  parent,
-		service: service,
-		list:    l,
+		parent:         parent,
+		service:        service,
+		list:           l,
+		deleteOnSelect: deleteOnSelect,
 	}
 }
 
@@ -53,17 +53,13 @@ func (m SecretsListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case tea.KeyEsc:
 			return m.parent, nil
 		case tea.KeyEnter:
+			if m.deleteOnSelect {
+				item := m.list.SelectedItem().(SecretListItem)
+
+				return NewConfirmDelete(m.parent, m.service, item), nil
+			}
+
 			return NewSelectAction(m.service), nil
-			//switch m.list.Cursor() {
-			//case 0:
-			//	return NewAddSecretPasswordModel(m.parent, m.service), nil
-			//case 1:
-			//	return NewAddSecretCartModel(m.parent, m.service), nil
-			//case 2:
-			//	return NewAddSecretTextModel(m.parent, m.service), nil
-			//default:
-			//	return m.parent, nil
-			//}
 		}
 
 	case tea.WindowSizeMsg:

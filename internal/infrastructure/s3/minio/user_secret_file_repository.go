@@ -64,3 +64,7 @@ func (r *UserSecretFileRepository) Get(ctx context.Context, objectId uuid.UUID) 
 
 	return buf.Bytes(), nil
 }
+
+func (r *UserSecretFileRepository) Delete(ctx context.Context, objectId uuid.UUID) error {
+	return r.client.RemoveObject(ctx, r.bucketName, objectId.String(), minio.RemoveObjectOptions{})
+}

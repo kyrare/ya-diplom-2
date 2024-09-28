@@ -56,6 +56,20 @@ func (s *UserSecretService) Create(ctx context.Context, command *command.CreateU
 	return createdSecret, nil
 }
 
+func (s *UserSecretService) Delete(ctx context.Context, secretId uuid.UUID) error {
+	err := s.secretRepository.Delete(ctx, secretId)
+	if err != nil {
+		return err
+	}
+
+	err = s.fileRepository.Delete(ctx, secretId)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (s *UserSecretService) GetAllForUser(ctx context.Context, userId uuid.UUID) ([]*entities.UserSecret, error) {
 	secrets, err := s.secretRepository.GetAllForUser(ctx, userId)
 	if err != nil {

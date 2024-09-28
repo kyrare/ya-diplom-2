@@ -10,5 +10,6 @@ import (
 
 type UserSecretService interface {
 	Create(ctx context.Context, command *command.CreateUserSecretCommand) (*entities.UserSecret, error)
+	Delete(ctx context.Context, secretId uuid.UUID) error
 	GetAllForUser(ctx context.Context, userId uuid.UUID) ([]*entities.UserSecret, error)
 }

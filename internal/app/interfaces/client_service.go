@@ -12,6 +12,6 @@ type ClientService interface {
 	Login(ctx context.Context, command *command.LoginCommand) error
 	Register(ctx context.Context, command *command.RegisterCommand) error
 	GetUserSecrets(ctx context.Context) ([]*entities.UserSecret, error)
-	GetUserSecretById(ctx context.Context, id uuid.UUID) (*entities.UserSecret, error)
+	DeleteUserSecret(ctx context.Context, id uuid.UUID) error
 	CreateUserSecret(ctx context.Context, command *command.ClientCreateUserSecretCommand) error
 }

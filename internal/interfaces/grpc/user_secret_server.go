@@ -3,6 +3,7 @@ package grpc
 import (
 	"context"
 
+	"github.com/google/uuid"
 	"github.com/kyrare/ya-diplom-2/internal/app/command"
 	"github.com/kyrare/ya-diplom-2/internal/app/interfaces"
 	"github.com/kyrare/ya-diplom-2/internal/app/services"
@@ -73,8 +74,31 @@ func (s UserSecretServer) CreateUserSecret(ctx context.Context, request *proto.C
 }
 
 func (s UserSecretServer) DeleteUserSecret(ctx context.Context, request *proto.DeleteUserSecretRequest) (*proto.DeleteUserSecretResponse, error) {
-	//TODO implement me
-	panic("implement me")
+	s.logger.Debugf("Начинаем удалять секрет %s", request.Id)
+
+	user, err := s.authService.GetUserByToken(ctx, request.Token)
+	if err != nil {
+		return nil, status.Errorf(codes.Unauthenticated, "invalid token")
+	}
+	if user == nil {
+		return nil, status.Errorf(codes.Unauthenticated, "invalid token")
+	}
+
+	s.logger.Debugf("Начинаем удалять секрет %s пользователя %s", request.Id, user.Id.String())
+
+	resp := &proto.DeleteUserSecretResponse{}
+
+	id, err := uuid.Parse(request.Id)
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "invalid id")
+	}
+
+	err = s.secretService.Delete(ctx, id)
+	if err != nil {
+		resp.Error = err.Error()
+	}
+
+	return resp, nil
 }
 
 func (s UserSecretServer) GetUserSecrets(ctx context.Context, request *proto.GetUserSecretsRequest) (*proto.GetUserSecretsResponse, error) {
@@ -104,6 +128,7 @@ func (s UserSecretServer) GetUserSecrets(ctx context.Context, request *proto.Get
 		}
 
 		result = append(result, &proto.UserSecret{
+			Id:   secret.Id.String(),
 			Name: secret.Name,
 			Type: string(secret.Type),
 			Data: d,

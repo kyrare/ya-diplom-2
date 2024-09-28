@@ -47,12 +47,10 @@ func (m SelectActionModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			switch m.list.Cursor() {
 			case 0:
 				return NewSecretType(m, m.service), nil
-			case 1:
+			case 1, 2:
 				secrets, _ := m.service.GetUserSecrets(context.Background())
 				// todo tui error
-				return NewSecretsList(m, secrets, m.service), nil
-			case 2:
-				return NewSecretType(m, m.service), nil
+				return NewSecretsList(m, secrets, m.service, m.list.Cursor() == 2), nil
 			}
 		}
 

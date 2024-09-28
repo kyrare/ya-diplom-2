@@ -49,6 +49,12 @@ func (r *UserSecretRepository) Create(ctx context.Context, secret *entities.Vali
 	return storedSecret, nil
 }
 
+func (r *UserSecretRepository) Delete(ctx context.Context, id uuid.UUID) error {
+	_, err := r.db.ExecContext(ctx, "delete from user_secrets where id = $1", id)
+
+	return err
+}
+
 func (r *UserSecretRepository) FindById(ctx context.Context, id uuid.UUID) (*entities.UserSecret, error) {
 	var secret entities.UserSecret
 	row := r.db.QueryRowContext(ctx, "select id, user_id, type, name, created_at, updated_at from user_secrets where id = $1", id)
