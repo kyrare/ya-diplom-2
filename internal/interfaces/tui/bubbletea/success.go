@@ -34,7 +34,6 @@ func (m SuccessModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m SuccessModel) View() string {
-
 	return docStyle.Render(fmt.Sprintf(
 		`%s
 

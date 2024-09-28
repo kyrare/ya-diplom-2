@@ -55,7 +55,7 @@ func (m SelectActionModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 
 	case tea.WindowSizeMsg:
-		h, v := docStyle.GetFrameSize()
+		h, v := docForListStyle.GetFrameSize()
 		m.list.SetSize(msg.Width-h, msg.Height-v)
 	}
 
@@ -65,5 +65,5 @@ func (m SelectActionModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m SelectActionModel) View() string {
-	return docStyle.Render(m.list.View())
+	return docForListStyle.Render(m.list.View())
 }

@@ -13,8 +13,9 @@ const (
 )
 
 var (
-	docStyle   = lipgloss.NewStyle().Margin(1, 2)
-	titleStyle = lipgloss.NewStyle().
+	docForListStyle = lipgloss.NewStyle().Margin(1, 2)
+	docStyle        = lipgloss.NewStyle().Margin(1, 4)
+	titleStyle      = lipgloss.NewStyle().
 			Background(lipgloss.Color("62")).
 			Foreground(lipgloss.Color("230")).
 			Padding(0, 1)
@@ -36,7 +37,7 @@ func errToString(err error) string {
 func getListSizes() (int, int) {
 	w, h, _ := term.GetSize(0)
 
-	dw, dh := docStyle.GetFrameSize()
+	dw, dh := docForListStyle.GetFrameSize()
 
 	return w - dw, h - dh
 }
