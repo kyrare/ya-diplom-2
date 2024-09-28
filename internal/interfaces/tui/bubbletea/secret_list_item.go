@@ -36,6 +36,10 @@ func (i SecretListItem) Description() string {
 		}
 
 		return string(runes)
+	case entities.UserSecretFileType:
+		data := (*i.Data).(*entities.UserSecretDataFile)
+
+		return data.File
 	}
 
 	return ""

@@ -57,6 +57,8 @@ func (m SelectSecretTypeModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return NewAddSecretCartModel(m.parent, m.service), nil
 			case 2:
 				return NewAddSecretTextModel(m.parent, m.service), nil
+			case 3:
+				return NewAddSecretFileModel(m.parent, m.service), nil
 			default:
 				return m.parent, nil
 			}
