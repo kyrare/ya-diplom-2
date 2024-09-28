@@ -3,7 +3,6 @@ package minio
 import (
 	"bytes"
 	"context"
-	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/minio/minio-go/v7"
@@ -24,7 +23,7 @@ func NewMinioUserSecretFileRepository(bucketName string, client *minio.Client) *
 func (r *UserSecretFileRepository) Store(ctx context.Context, objectId uuid.UUID, data []byte) error {
 	reader := bytes.NewReader(data)
 
-	info, err := r.client.PutObject(
+	_, err := r.client.PutObject(
 		ctx,
 		r.bucketName,
 		objectId.String(),
@@ -38,8 +37,6 @@ func (r *UserSecretFileRepository) Store(ctx context.Context, objectId uuid.UUID
 	if err != nil {
 		return err
 	}
-
-	fmt.Println(info)
 
 	return nil
 }
@@ -59,6 +56,9 @@ func (r *UserSecretFileRepository) Get(ctx context.Context, objectId uuid.UUID) 
 	buf := bytes.Buffer{}
 	_, err = buf.ReadFrom(object)
 	if err != nil {
+		if err.Error() != "The specified key does not exist" {
+			return nil, nil
+		}
 		return nil, err
 	}
 

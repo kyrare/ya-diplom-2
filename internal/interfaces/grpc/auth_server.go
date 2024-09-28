@@ -30,7 +30,7 @@ func NewAuthServer(s *grpc.Server, userService interfaces.UserService, authServi
 func (s AuthServer) Register(ctx context.Context, request *proto.RegisterRequest) (*proto.RegisterResponse, error) {
 	resp := new(proto.RegisterResponse)
 
-	_, err := s.userService.Create(&command.CreateUserCommand{
+	_, err := s.userService.Create(ctx, &command.CreateUserCommand{
 		Login:    request.Login,
 		Password: request.Password,
 	})
@@ -39,7 +39,7 @@ func (s AuthServer) Register(ctx context.Context, request *proto.RegisterRequest
 		return resp, nil
 	}
 
-	login, err := s.authService.Login(&command.LoginCommand{
+	login, err := s.authService.Login(ctx, &command.LoginCommand{
 		Login:    request.Login,
 		Password: request.Password,
 	})
@@ -56,7 +56,7 @@ func (s AuthServer) Register(ctx context.Context, request *proto.RegisterRequest
 func (s AuthServer) Login(ctx context.Context, request *proto.LoginRequest) (*proto.LoginResponse, error) {
 	resp := new(proto.LoginResponse)
 
-	login, err := s.authService.Login(&command.LoginCommand{
+	login, err := s.authService.Login(ctx, &command.LoginCommand{
 		Login:    request.Login,
 		Password: request.Password,
 	})

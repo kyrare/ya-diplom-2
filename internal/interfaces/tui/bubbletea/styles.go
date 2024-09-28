@@ -1,6 +1,9 @@
 package bubbletea
 
-import "github.com/charmbracelet/lipgloss"
+import (
+	"github.com/charmbracelet/lipgloss"
+	"github.com/charmbracelet/x/term"
+)
 
 const (
 	hotPink  = lipgloss.Color("#EE6FF8")
@@ -28,4 +31,12 @@ func errToString(err error) string {
 	}
 
 	return message
+}
+
+func getListSizes() (int, int) {
+	w, h, _ := term.GetSize(0)
+
+	dw, dh := docStyle.GetFrameSize()
+
+	return w - dw, h - dh
 }

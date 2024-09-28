@@ -24,6 +24,15 @@ func NewUserSecretBankCard(number string, month, year, cvv int64) *UserSecretDat
 	}
 }
 
+func newUserSecretBankCardFromData(data []byte) (*UserSecretDataBankCard, error) {
+	secretData := new(UserSecretDataBankCard)
+	err := json.Unmarshal(data, secretData)
+	if err != nil {
+		return nil, err
+	}
+	return secretData, nil
+}
+
 func (d *UserSecretDataBankCard) GetType() UserSecretType {
 	return UserSecretBankCardType
 }

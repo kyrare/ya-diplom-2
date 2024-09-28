@@ -18,9 +18,10 @@ const (
 
 type UserSecret struct {
 	Id        uuid.UUID
+	UserID    uuid.UUID
 	User      *User
 	Type      UserSecretType
-	Name      string // Название файла которое отображается пользователю
+	Name      string
 	Data      *UserSecretData
 	CreatedAt time.Time
 	UpdatedAt time.Time
@@ -60,17 +61,10 @@ func (us *UserSecret) validate() error {
 }
 
 func GetSecretTypeByString(t string) (UserSecretType, error) {
-
 	switch t {
-	case "password":
-		return UserSecretPasswordType, nil
-	case "bank_card":
-		return UserSecretBankCardType, nil
-	case "text":
-		return UserSecretTextType, nil
-	case "file":
-		return UserSecretFileType, nil
+	case "password", "bank_card", "text", "file":
+		return UserSecretType(t), nil
 	}
 
-	return UserSecretType(""), errors.New("Неизвестынй тип сикрета")
+	return UserSecretType(""), errors.New("неизвестный тип секрета")
 }

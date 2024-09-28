@@ -12,17 +12,17 @@ type StartModel struct {
 }
 
 func New(service interfaces.ClientService) StartModel {
-	list := list.New([]list.Item{
+	l := list.New([]list.Item{
 		ModelItem{title: "Авторизация", desc: "Авторизация по логину и паролю"},
 		ModelItem{title: "Регистрация", desc: "Регистрация для новых пользователей"},
 	}, list.NewDefaultDelegate(), 0, 0)
 
-	list.SetFilteringEnabled(false)
-	list.SetShowStatusBar(false)
-	list.Title = "Необходимо авторизоваться"
+	l.SetFilteringEnabled(false)
+	l.SetShowStatusBar(false)
+	l.Title = "Необходимо авторизоваться"
 
 	return StartModel{
-		list:    list,
+		list:    l,
 		service: service,
 	}
 }

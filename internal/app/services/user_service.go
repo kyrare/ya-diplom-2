@@ -1,8 +1,8 @@
 package services
 
 import (
+	"context"
 	"errors"
-	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/kyrare/ya-diplom-2/internal/app/command"
@@ -25,7 +25,7 @@ func NewUserService(userRepository repository.UserRepository, authService interf
 	}
 }
 
-func (s *UserService) Create(userCommand *command.CreateUserCommand) (*command.CreateUserCommandResult, error) {
+func (s *UserService) Create(ctx context.Context, userCommand *command.CreateUserCommand) (*command.CreateUserCommandResult, error) {
 	newUser := entities.NewUser(
 		userCommand.Login,
 		userCommand.Password,
@@ -36,8 +36,7 @@ func (s *UserService) Create(userCommand *command.CreateUserCommand) (*command.C
 		return nil, err
 	}
 
-	existUser, err := s.userRepository.FindByLogin(userCommand.Login)
-	fmt.Printf("%+v\n", existUser)
+	existUser, err := s.userRepository.FindByLogin(ctx, userCommand.Login)
 	if err != nil {
 		return nil, err
 	}
@@ -52,7 +51,7 @@ func (s *UserService) Create(userCommand *command.CreateUserCommand) (*command.C
 	}
 	validatedUser.Password = hash
 
-	createdUser, err := s.userRepository.Create(validatedUser)
+	createdUser, err := s.userRepository.Create(ctx, validatedUser)
 	if err != nil {
 		return nil, err
 	}
@@ -62,8 +61,8 @@ func (s *UserService) Create(userCommand *command.CreateUserCommand) (*command.C
 	}, nil
 }
 
-func (s *UserService) FindUserById(id uuid.UUID) (*command.FindUserByIdCommandResult, error) {
-	user, err := s.userRepository.FindById(id)
+func (s *UserService) FindUserById(ctx context.Context, id uuid.UUID) (*command.FindUserByIdCommandResult, error) {
+	user, err := s.userRepository.FindById(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -73,8 +72,8 @@ func (s *UserService) FindUserById(id uuid.UUID) (*command.FindUserByIdCommandRe
 	}, nil
 }
 
-func (s *UserService) FindUserByLogin(id uuid.UUID) (*command.FindUserByLoginCommandResult, error) {
-	user, err := s.userRepository.FindById(id)
+func (s *UserService) FindUserByLogin(ctx context.Context, id uuid.UUID) (*command.FindUserByLoginCommandResult, error) {
+	user, err := s.userRepository.FindById(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -84,6 +83,6 @@ func (s *UserService) FindUserByLogin(id uuid.UUID) (*command.FindUserByLoginCom
 	}, nil
 }
 
-func (s *UserService) Delete(id uuid.UUID) error {
-	return s.userRepository.Delete(id)
+func (s *UserService) Delete(ctx context.Context, id uuid.UUID) error {
+	return s.userRepository.Delete(ctx, id)
 }

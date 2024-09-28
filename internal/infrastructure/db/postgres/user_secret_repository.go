@@ -1,6 +1,7 @@
 package postgres
 
 import (
+	"context"
 	"database/sql"
 	"errors"
 
@@ -20,8 +21,9 @@ func NewPostgresUserSecretRepository(db *sql.DB, userRepo *UserRepository) *User
 	}
 }
 
-func (r *UserSecretRepository) Create(secret *entities.ValidatedUserSecret) (*entities.UserSecret, error) {
-	row := r.db.QueryRow(
+func (r *UserSecretRepository) Create(ctx context.Context, secret *entities.ValidatedUserSecret) (*entities.UserSecret, error) {
+	row := r.db.QueryRowContext(
+		ctx,
 		"insert into user_secrets (id, user_id, type, name, created_at, updated_at) values ($1, $2, $3, $4, $5, $6)",
 		secret.Id,
 		secret.User.Id,
@@ -35,7 +37,7 @@ func (r *UserSecretRepository) Create(secret *entities.ValidatedUserSecret) (*en
 		return nil, err
 	}
 
-	storedSecret, err := r.FindById(secret.Id)
+	storedSecret, err := r.FindById(ctx, secret.Id)
 	if err != nil {
 		return nil, err
 	}
@@ -47,18 +49,17 @@ func (r *UserSecretRepository) Create(secret *entities.ValidatedUserSecret) (*en
 	return storedSecret, nil
 }
 
-func (r *UserSecretRepository) FindById(id uuid.UUID) (*entities.UserSecret, error) {
+func (r *UserSecretRepository) FindById(ctx context.Context, id uuid.UUID) (*entities.UserSecret, error) {
 	var secret entities.UserSecret
-	row := r.db.QueryRow("select id, user_id, type, name, created_at, updated_at from user_secrets where id = $1", id)
+	row := r.db.QueryRowContext(ctx, "select id, user_id, type, name, created_at, updated_at from user_secrets where id = $1", id)
 
-	var userId uuid.UUID
-	err := row.Scan(&secret.Id, &userId, &secret.Type, &secret.Name, &secret.CreatedAt, &secret.UpdatedAt)
+	err := row.Scan(&secret.Id, &secret.UserID, &secret.Type, &secret.Name, &secret.CreatedAt, &secret.UpdatedAt)
 
 	if errors.Is(err, sql.ErrNoRows) {
 		return nil, nil
 	}
 
-	user, err := r.userRepo.FindById(userId)
+	user, err := r.userRepo.FindById(ctx, secret.UserID)
 	if err != nil {
 		return nil, err
 	}
@@ -70,4 +71,45 @@ func (r *UserSecretRepository) FindById(id uuid.UUID) (*entities.UserSecret, err
 	secret.User = user
 
 	return &secret, nil
+}
+
+func (r *UserSecretRepository) GetAllForUser(ctx context.Context, userID uuid.UUID) ([]*entities.UserSecret, error) {
+	rows, err := r.db.QueryContext(ctx, "select id, user_id, type, name, created_at, updated_at from user_secrets WHERE user_id = $1", userID)
+	defer rows.Close()
+
+	if err != nil {
+		return nil, err
+	}
+
+	result := make([]*entities.UserSecret, 0)
+	usersIDs := make([]uuid.UUID, 0)
+
+	for rows.Next() {
+		var secret entities.UserSecret
+		err = rows.Scan(&secret.Id, &secret.UserID, &secret.Type, &secret.Name, &secret.CreatedAt, &secret.UpdatedAt)
+		if err != nil {
+			return nil, err
+		}
+
+		result = append(result, &secret)
+		usersIDs = append(usersIDs, secret.UserID)
+	}
+
+	users, err := r.userRepo.FindByIDs(ctx, usersIDs)
+	if err != nil {
+		return nil, err
+	}
+
+	usersMap := make(map[uuid.UUID]*entities.User, len(users))
+	for _, user := range users {
+		usersMap[user.Id] = user
+	}
+
+	for i, secret := range result {
+		if user, ok := usersMap[secret.UserID]; ok {
+			result[i].User = user
+		}
+	}
+
+	return result, nil
 }

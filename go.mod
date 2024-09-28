@@ -10,6 +10,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/ilyakaznacheev/cleanenv v1.5.0
 	github.com/jackc/pgx/v5 v5.7.1
+	github.com/lib/pq v1.10.9
 	github.com/minio/minio-go/v7 v7.0.76
 	go.uber.org/zap v1.27.0
 	golang.org/x/crypto v0.27.0

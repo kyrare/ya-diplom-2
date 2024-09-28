@@ -1,6 +1,8 @@
 package bubbletea
 
 import (
+	"context"
+
 	"github.com/charmbracelet/bubbles/list"
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
@@ -13,18 +15,20 @@ type SelectActionModel struct {
 }
 
 func NewSelectAction(service interfaces.ClientService) SelectActionModel {
-	list := list.New([]list.Item{
+	w, h := getListSizes()
+
+	l := list.New([]list.Item{
 		ModelItem{title: "Добавить новый секрет", desc: "Сохраните новый секрет!"},
 		ModelItem{title: "Показать все секреты", desc: "Показать все секреты, которые уже были сохранили"},
 		ModelItem{title: "Удалить секрет", desc: "Удалить один из секретов"},
-	}, list.NewDefaultDelegate(), 60, 15)
+	}, list.NewDefaultDelegate(), w, h)
 
-	list.SetFilteringEnabled(false)
-	list.SetShowStatusBar(false)
-	list.Title = "Выберете доступное действие"
+	l.SetFilteringEnabled(false)
+	l.SetShowStatusBar(false)
+	l.Title = "Выберете доступное действие"
 
 	return SelectActionModel{
-		list:    list,
+		list:    l,
 		service: service,
 	}
 }
@@ -44,6 +48,10 @@ func (m SelectActionModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			case 0:
 				return NewSecretType(m, m.service), nil
 			case 1:
+				secrets, _ := m.service.GetUserSecrets(context.Background())
+				// todo tui error
+				return NewSecretsList(m, secrets, m.service), nil
+			case 2:
 				return NewSecretType(m, m.service), nil
 			}
 		}

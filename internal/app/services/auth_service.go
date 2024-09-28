@@ -1,6 +1,7 @@
 package services
 
 import (
+	"context"
 	"errors"
 	"time"
 
@@ -44,13 +45,13 @@ func NewAuthService(
 	}
 }
 
-func (s AuthService) Login(c *command.LoginCommand) (*command.LoginCommandResult, error) {
+func (s AuthService) Login(ctx context.Context, c *command.LoginCommand) (*command.LoginCommandResult, error) {
 	if c.Login == "" || c.Password == "" {
 		s.logger.Debug("Авторизации с пустым логином или паролем")
 		return nil, ErrInvalidCredentials
 	}
 
-	user, err := s.userRepository.FindByLogin(c.Login)
+	user, err := s.userRepository.FindByLogin(ctx, c.Login)
 	if err != nil {
 		s.logger.Debugf("Авториазации завершилась с ошибкой при поиске пользователя, ошибка: %s", err.Error())
 		return nil, err
@@ -76,13 +77,13 @@ func (s AuthService) Login(c *command.LoginCommand) (*command.LoginCommandResult
 	}, nil
 }
 
-func (s AuthService) GetUserByToken(t string) (*entities.User, error) {
+func (s AuthService) GetUserByToken(ctx context.Context, t string) (*entities.User, error) {
 	claims, err := s.parseJwtToken(t)
 	if err != nil {
 		return nil, err
 	}
 
-	user, err := s.userRepository.FindById(claims.UID)
+	user, err := s.userRepository.FindById(ctx, claims.UID)
 	if err != nil {
 		return nil, err
 	}

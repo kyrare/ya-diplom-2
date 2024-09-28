@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 
+	"github.com/google/uuid"
 	"github.com/kyrare/ya-diplom-2/internal/app/command"
 	"github.com/kyrare/ya-diplom-2/internal/app/interfaces"
 	"github.com/kyrare/ya-diplom-2/internal/domain/entities"
@@ -37,7 +38,7 @@ func (s *UserSecretService) Create(ctx context.Context, command *command.CreateU
 		return nil, err
 	}
 
-	createdSecret, err := s.secretRepository.Create(validatedSecret)
+	createdSecret, err := s.secretRepository.Create(ctx, validatedSecret)
 	if err != nil {
 		return nil, err
 	}
@@ -53,4 +54,26 @@ func (s *UserSecretService) Create(ctx context.Context, command *command.CreateU
 	}
 
 	return createdSecret, nil
+}
+
+func (s *UserSecretService) GetAllForUser(ctx context.Context, userId uuid.UUID) ([]*entities.UserSecret, error) {
+	secrets, err := s.secretRepository.GetAllForUser(ctx, userId)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, secret := range secrets {
+		d, err := s.fileRepository.Get(ctx, secret.Id)
+		if err != nil {
+			return nil, err
+		}
+
+		data, err := entities.MakeUserSecretData(secret.Type, d)
+		if err != nil {
+			return nil, err
+		}
+		secret.Data = &data
+	}
+
+	return secrets, nil
 }

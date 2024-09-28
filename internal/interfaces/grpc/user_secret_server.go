@@ -2,8 +2,6 @@ package grpc
 
 import (
 	"context"
-	"encoding/json"
-	"errors"
 
 	"github.com/kyrare/ya-diplom-2/internal/app/command"
 	"github.com/kyrare/ya-diplom-2/internal/app/interfaces"
@@ -36,7 +34,7 @@ func NewUserSecretServer(s *grpc.Server, secretService interfaces.UserSecretServ
 }
 
 func (s UserSecretServer) CreateUserSecret(ctx context.Context, request *proto.CreateUserSecretRequest) (*proto.CreateUserSecretResponse, error) {
-	user, err := s.authService.GetUserByToken(request.Token)
+	user, err := s.authService.GetUserByToken(ctx, request.Token)
 	if err != nil {
 		return nil, status.Errorf(codes.Unauthenticated, "invalid token")
 	}
@@ -49,7 +47,7 @@ func (s UserSecretServer) CreateUserSecret(ctx context.Context, request *proto.C
 		return nil, status.Errorf(codes.InvalidArgument, "invalid secret type")
 	}
 
-	d, err := s.makeData(t, request.Secret.Data)
+	d, err := entities.MakeUserSecretData(t, request.Secret.Data)
 	if err != nil {
 		s.logger.Error(err)
 		return nil, status.Errorf(codes.InvalidArgument, "invalid secret data")
@@ -72,7 +70,6 @@ func (s UserSecretServer) CreateUserSecret(ctx context.Context, request *proto.C
 	}
 
 	return resp, nil
-
 }
 
 func (s UserSecretServer) DeleteUserSecret(ctx context.Context, request *proto.DeleteUserSecretRequest) (*proto.DeleteUserSecretResponse, error) {
@@ -81,36 +78,39 @@ func (s UserSecretServer) DeleteUserSecret(ctx context.Context, request *proto.D
 }
 
 func (s UserSecretServer) GetUserSecrets(ctx context.Context, request *proto.GetUserSecretsRequest) (*proto.GetUserSecretsResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (s UserSecretServer) makeData(secretType entities.UserSecretType, data []byte) (entities.UserSecretData, error) {
-
-	switch secretType {
-	case entities.UserSecretPasswordType:
-		secretData := new(entities.UserSecretDataPassword)
-		err := json.Unmarshal(data, secretData)
-		if err != nil {
-			return nil, err
-		}
-		return secretData, nil
-	case entities.UserSecretBankCardType:
-		secretData := new(entities.UserSecretDataBankCard)
-		err := json.Unmarshal(data, secretData)
-		if err != nil {
-			return nil, err
-		}
-		return secretData, nil
-	case entities.UserSecretTextType:
-		secretData := entities.NewUserSecretText(string(data))
-
-		return secretData, nil
-	case entities.UserSecretFileType:
-		panic("implement me")
-
-		return nil, nil
+	user, err := s.authService.GetUserByToken(ctx, request.Token)
+	if err != nil {
+		return nil, status.Errorf(codes.Unauthenticated, "invalid token")
+	}
+	if user == nil {
+		return nil, status.Errorf(codes.Unauthenticated, "invalid token")
 	}
 
-	return nil, errors.New("invalid secret type")
+	resp := &proto.GetUserSecretsResponse{}
+
+	s.logger.Infof("Получение секретов пользователя %s", user.Id.String())
+
+	secrets, err := s.secretService.GetAllForUser(ctx, user.Id)
+	if err != nil {
+		s.logger.Error(err)
+		resp.Error = err.Error()
+	}
+
+	result := make([]*proto.UserSecret, 0, len(secrets))
+	for _, secret := range secrets {
+		d, err := (*secret.Data).GetData()
+		if err != nil {
+			return nil, err
+		}
+
+		result = append(result, &proto.UserSecret{
+			Name: secret.Name,
+			Type: string(secret.Type),
+			Data: d,
+		})
+	}
+
+	resp.Secrets = result
+
+	return resp, nil
 }

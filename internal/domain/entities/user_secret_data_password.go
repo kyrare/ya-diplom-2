@@ -19,6 +19,15 @@ func NewUserSecretPassword(login, password string) *UserSecretDataPassword {
 	}
 }
 
+func newUserSecretPasswordFromData(data []byte) (*UserSecretDataPassword, error) {
+	secretData := new(UserSecretDataPassword)
+	err := json.Unmarshal(data, secretData)
+	if err != nil {
+		return nil, err
+	}
+	return secretData, nil
+}
+
 func (d *UserSecretDataPassword) GetType() UserSecretType {
 	return UserSecretPasswordType
 }

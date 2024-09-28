@@ -17,12 +17,14 @@ func NewSecretType(parent tea.Model, service interfaces.ClientService) SelectSec
 	delegate := list.NewDefaultDelegate()
 	delegate.ShowDescription = false
 
+	w, h := getListSizes()
+
 	l := list.New([]list.Item{
 		ModelItem{title: "Добавить логин/пароль", desc: ""},
 		ModelItem{title: "Добавить банковскую карту", desc: ""},
 		ModelItem{title: "Добавить производный текст", desc: ""},
 		ModelItem{title: "Добавить файл", desc: ""},
-	}, delegate, 60, 15)
+	}, delegate, w, h)
 
 	l.SetFilteringEnabled(false)
 	l.SetShowStatusBar(false)

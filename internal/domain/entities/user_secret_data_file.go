@@ -9,6 +9,10 @@ func NewUserSecretFile() *UserSecretDataFile {
 	return &UserSecretDataFile{}
 }
 
+func newUserSecretFileFromData(data []byte) (*UserSecretDataText, error) {
+	return nil, nil
+}
+
 func (d *UserSecretDataFile) GetType() UserSecretType {
 	return UserSecretFileType
 }

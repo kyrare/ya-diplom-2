@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
 
 	"github.com/google/uuid"
@@ -76,8 +77,43 @@ func (s *ClientService) Register(ctx context.Context, command *command.RegisterC
 }
 
 func (s *ClientService) GetUserSecrets(ctx context.Context) ([]*entities.UserSecret, error) {
-	//TODO implement me
-	panic("implement me")
+	if !s.isAuth() {
+		return nil, errors.New("not authorized")
+	}
+
+	client := proto.NewUserSecretsClient(s.conn)
+
+	resp, err := client.GetUserSecrets(ctx, &proto.GetUserSecretsRequest{
+		Token: s.jwtToken,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+	if resp.Error != "" {
+		return nil, errors.New(resp.Error)
+	}
+
+	secrets := make([]*entities.UserSecret, 0, len(resp.Secrets))
+
+	for _, secret := range resp.Secrets {
+		t := entities.UserSecretType(secret.Type)
+		d, err := entities.MakeUserSecretData(t, secret.Data)
+		if err != nil {
+			return nil, err
+		}
+
+		secrets = append(secrets, &entities.UserSecret{
+			Type: entities.UserSecretType(secret.Type),
+			Name: secret.Name,
+			Data: &d,
+		})
+	}
+
+	fmt.Println("secrets", secrets)
+	fmt.Println("secrets len", len(secrets))
+
+	return secrets, nil
 }
 
 func (s *ClientService) GetUserSecretById(ctx context.Context, id uuid.UUID) (*entities.UserSecret, error) {
