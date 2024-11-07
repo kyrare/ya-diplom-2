@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package diploma;
+
+option go_package = "auth/proto";
+
+message RegisterRequest {
+  string login = 1;
+  string password = 2;
+}
+
+message RegisterResponse {
+  string jwtToken = 1;
+  string error = 2; // ошибка
+}
+
+message LoginRequest {
+  string login = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  string jwtToken = 1;
+  string error = 2; // ошибка
+}
+
+
+service Auth {
+  rpc Register(RegisterRequest) returns (RegisterResponse);
+  rpc Login(LoginRequest) returns (LoginResponse);
+}
